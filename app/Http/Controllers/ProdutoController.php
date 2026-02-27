@@ -25,7 +25,12 @@ class ProdutoController extends Controller
             'preco' => 'required|numeric',
         ]);
 
-        Produto::create($request->all());
+        $dados = $request->all();
+
+        // Corrige checkbox
+        $dados['ativo'] = $request->has('ativo') ? 1 : 0;
+
+        Produto::create($dados);
 
         return redirect()->route('produtos.index')
             ->with('success', 'Produto cadastrado com sucesso!');
@@ -37,17 +42,22 @@ class ProdutoController extends Controller
     }
 
     public function update(Request $request, Produto $produto)
-    {
-        $request->validate([
-            'nome' => 'required',
-            'preco' => 'required|numeric',
-        ]);
+{
+    $request->validate([
+        'nome' => 'required',
+        'preco' => 'required|numeric',
+    ]);
 
-        $produto->update($request->all());
+    $dados = $request->all();
 
-        return redirect()->route('produtos.index')
-            ->with('success', 'Produto atualizado com sucesso!');
-    }
+    // Corrige checkbox
+    $dados['ativo'] = $request->has('ativo') ? 1 : 0;
+
+    $produto->update($dados);
+
+    return redirect()->route('produtos.index')
+        ->with('success', 'Produto atualizado com sucesso!');
+}
 
     public function destroy(Produto $produto)
     {

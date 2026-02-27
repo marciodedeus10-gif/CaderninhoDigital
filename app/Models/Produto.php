@@ -15,5 +15,10 @@ class Produto extends Model
         'validade_padrao_dias',
         'recorrente',
         'ativo',
-    ];
+];
+
+public function vendas()
+{
+    return $this->hasMany(Venda::class);
+}
 }
