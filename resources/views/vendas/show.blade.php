@@ -8,6 +8,8 @@ Status: {{$venda->status}}
 
 <hr>
 
+
+
 <h4>Adicionar Produto</h4>
 
 <form method="POST" action="{{ route('vendas.addItem',$venda->id) }}">
