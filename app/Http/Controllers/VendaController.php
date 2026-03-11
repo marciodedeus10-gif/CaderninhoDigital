@@ -5,64 +5,87 @@ namespace App\Http\Controllers;
 use App\Models\Venda;
 use App\Models\Cliente;
 use App\Models\Produto;
+use App\Models\Servico;
+use App\Models\ItemVenda;
 use Illuminate\Http\Request;
 
 class VendaController extends Controller
 {
-    public function index()
-    {
-        $vendas = Venda::with(['cliente', 'produto'])->latest()->get();
-        return view('vendas.index', compact('vendas'));
-    }
 
-    public function create()
-    {
-        $clientes = Cliente::orderBy('nome')->get();
-        $produtos = Produto::orderBy('nome')->get();
+public function index()
+{
+$vendas = Venda::with('cliente')->get();
 
-        return view('vendas.create', compact('clientes','produtos'));
-    }
+return view('vendas.index', compact('vendas'));
+}
 
-    public function store(Request $request)
-    {
-        Venda::create($request->all());
+public function create()
+{
+$clientes = Cliente::all();
 
-        return redirect()->route('vendas.index')
-        ->with('success','Venda cadastrada com sucesso');
-    }
+return view('vendas.create', compact('clientes'));
+}
 
+public function store(Request $request)
+{
 
-    public function edit(Venda $venda)
-    {
-        $clientes = Cliente::all();
-        $produtos = Produto::all();
-        return view('vendas.edit', compact('venda', 'clientes', 'produtos'));
-    }
+$venda = Venda::create([
+'cliente_id'=>$request->cliente_id,
+'data_venda'=>now(),
+'status'=>'Em andamento'
+]);
 
-    public function update(Request $request, Venda $venda)
-    {
-        $valorTotal = $request->valor - ($request->desconto ?? 0);
+return redirect()->route('vendas.show',$venda->id);
 
-        $venda->update([
-            'cliente_id' => $request->cliente_id,
-            'produto_id' => $request->produto_id,
-            'valor' => $request->valor,
-            'desconto' => $request->desconto ?? 0,
-            'valor_total' => $valorTotal,
-            'data_venda' => $request->data_venda,
-            'data_vencimento' => $request->data_vencimento,
-            'observacoes' => $request->observacoes,
-        ]);
+}
 
-        return redirect()->route('vendas.index')
-                        ->with('success', 'Venda atualizada!');
-    }
+public function show($id)
+{
 
-    public function destroy(Venda $venda)
-    {
-        $venda->delete();
-        return redirect()->route('vendas.index')
-                        ->with('success', 'Venda excluída!');
-    }
+$venda = Venda::findOrFail($id);
+
+$produtos = Produto::all();
+
+$servicos = Servico::all();
+
+return view('vendas.show',compact('venda','produtos','servicos'));
+
+}
+
+public function addItem(Request $request,$venda)
+{
+
+$venda = Venda::findOrFail($venda);
+
+$subtotal = $request->quantidade * $request->preco;
+
+ItemVenda::create([
+'venda_id'=>$venda->id,
+'produto_id'=>$request->produto_id,
+'servico_id'=>$request->servico_id,
+'quantidade'=>$request->quantidade,
+'preco'=>$request->preco,
+'subtotal'=>$subtotal
+]);
+
+$venda->total += $subtotal;
+$venda->save();
+
+return back();
+
+}
+
+public function status($venda)
+{
+
+$venda = Venda::findOrFail($venda);
+
+$venda->status = 'Finalizada';
+
+$venda->save();
+
+return back();
+
+}
 
 }

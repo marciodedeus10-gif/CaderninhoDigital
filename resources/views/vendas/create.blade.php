@@ -1,51 +1,37 @@
-<!DOCTYPE html>
-
-
 @extends('layouts.app')
 
 @section('content')
 
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<h2>Nova Venda</h2>
 
-<div class="mb-3">
-<label>Produto</label>
-<select name="produto_id" class="form-control">
-@foreach($produtos as $produto)
-<option value="{{ $produto->id }}">{{ $produto->nome }}</option>
-@endforeach
-</select>
-</div>
+<form action="{{ route('vendas.store') }}" method="POST">
 
-<div class="mb-3">
-<label>Quantidade</label>
-<input type="number" name="quantidade" class="form-control">
-</div>
+    @csrf
 
-<div class="mb-3">
-<label>Valor</label>
-<input type="text" name="valor" class="form-control">
-</div>
+    <label>Cliente</label>
 
-<div class="mb-3">
-<label>Desconto</label>
-<input type="text" name="desconto_item" class="form-control">
-</div>
+    <select name="cliente_id" class="form-control">
 
-<div class="mb-3">
-<label>Total</label>
-<input type="text" name="total" class="form-control">
-</div>
+        @foreach($clientes as $cliente)
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <option value="{{$cliente->id}}">{{$cliente->nome}}</option>
 
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+        @endforeach
 
-<script>
-$(document).ready(function() {
-    $('#cliente').select2({
-        placeholder: "Pesquisar cliente"
-    });
-});
-</script>
+    </select>
+
+    <br>
+
+    <a href="{{ route('clientes.create') }}" class="btn btn-secondary">
+    Cadastrar Cliente
+    </a>
+
+    <br><br>
+
+    <button class="btn btn-primary">
+    Criar Venda
+    </button>
+
+</form>
 
 @endsection

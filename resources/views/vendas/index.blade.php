@@ -3,42 +3,51 @@
 @section('content')
 
 <div class="container">
-    <h2>Histórico de Vendas</h2>
 
-    <a href="{{ route('vendas.create') }}" class="btn btn-success mb-3">
-        Nova Venda
-    </a>
+<h2>Vendas</h2>
 
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Cliente</th>
-                <th>Produto</th>
-                <th>Valor Total</th>
-                <th>Data</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($vendas as $venda)
-            <tr>
-                <td>{{ $venda->cliente->nome }}</td>
-                <td>{{ $venda->produto->nome }}</td>
-                <td>R$ {{ number_format($venda->valor_total, 2, ',', '.') }}</td>
-                <td>{{ $venda->data_venda }}</td>
-                <td>
-                    <a href="{{ route('vendas.edit', $venda) }}" class="btn btn-primary btn-sm">Editar</a>
+<a href="{{ route('vendas.create') }}" class="btn btn-primary">
+Nova Venda
+</a>
 
-                    <form action="{{ route('vendas.destroy', $venda) }}" method="POST" style="display:inline;">
-                        @csrf
-                        @method('DELETE')
-                        <button class="btn btn-danger btn-sm">Excluir</button>
-                    </form>
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
+<br><br>
+
+<table class="table">
+
+<tr>
+<th>ID</th>
+<th>Cliente</th>
+<th>Status</th>
+<th>Total</th>
+<th>Ações</th>
+</tr>
+
+@foreach($vendas as $venda)
+
+<tr>
+
+<td>{{ $venda->id }}</td>
+
+<td>{{ $venda->cliente->nome ?? '' }}</td>
+
+<td>{{ $venda->status }}</td>
+
+<td>R$ {{ $venda->total }}</td>
+
+<td>
+
+<a href="{{ route('vendas.show',$venda->id) }}" class="btn btn-info">
+Abrir
+</a>
+
+</td>
+
+</tr>
+
+@endforeach
+
+</table>
+
 </div>
 
 @endsection
