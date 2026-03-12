@@ -42,48 +42,71 @@ Adicionar
 
 <hr>
 
-<h4>Adicionar Serviço</h4>
+<h4>Dados do Cliente</h4>
 
-<form method="POST" action="{{ route('vendas.addItem',$venda->id) }}">
+<p><strong>Nome:</strong> {{ $venda->cliente->nome }}</p>
+<p><strong>Telefone:</strong> {{ $venda->cliente->telefone }}</p>
+<p><strong>Cidade:</strong> {{ $venda->cliente->cidade }}</p>
 
-@csrf
 
-<select name="servico_id">
+<table class="table">
 
-<option value="">Selecione</option>
+<thead>
+<tr>
+<th>Produto</th>
+<th>Preço</th>
+<th>Quantidade</th>
+<th>Subtotal</th>
+<th>Desconto</th>
+<th>Total</th>
+</tr>
+</thead>
 
-@foreach($servicos as $servico)
+<tbody>
 
-<option value="{{$servico->id}}">
-{{$servico->nome}}
-</option>
+@foreach($venda->itens as $item)
+
+<tr>
+
+<td>{{ $item->produto->nome }}</td>
+
+<td>R$ {{ number_format($item->preco,2,',','.') }}</td>
+
+<td>{{ $item->quantidade }}</td>
+
+<td>
+R$ {{ number_format($item->preco * $item->quantidade,2,',','.') }}
+</td>
+
+<td>
+R$ {{ number_format($item->desconto,2,',','.') }}
+</td>
+
+<td>
+R$ {{ number_format(($item->preco * $item->quantidade) - $item->desconto,2,',','.') }}
+</td>
+
+</tr>
 
 @endforeach
 
-</select>
+</tbody>
 
-<input type="number" name="quantidade">
+</table>
 
-<input type="text" name="preco">
+<div class="card">
 
-<button class="btn btn-success">
-Adicionar
-</button>
+<div class="card-body">
 
-</form>
+<p><strong>Desconto Total:</strong>
+R$ {{ number_format($descontoTotal,2,',','.') }}
+</p>
 
-<hr>
+<h4>
+Total da Venda:
+R$ {{ number_format($total,2,',','.') }}
+</h4>
 
-<h3>Total: R$ {{$venda->total}}</h3>
+</div>
 
-<form method="POST" action="{{ route('vendas.status',$venda->id) }}">
-
-@csrf
-
-<button class="btn btn-primary">
-Finalizar Venda
-</button>
-
-</form>
-
-@endsection
+</div>

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Venda;
+use App\Models\Cliente;
 use App\Models\Produto;
 
 class DashboardController extends Controller
@@ -18,18 +20,12 @@ class DashboardController extends Controller
 
 public function index()
 {
-    $totalVendas = Venda::where('user_id', auth()->id())->sum('valor_total');
-
-    $totalClientes = Cliente::where('user_id', auth()->id())->count();
-
-    $totalProdutos = Produto::where('user_id', auth()->id())->count();
+    $totalClientes = Cliente::count();
+    $totalVendas = Venda::count();
 
     return view('dashboard', compact(
-        'totalVendas',
         'totalClientes',
-        'totalProdutos'
-
-
+        'totalVendas'
     ));
 }
 

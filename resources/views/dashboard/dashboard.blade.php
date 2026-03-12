@@ -8,38 +8,38 @@
 
     <div class="row">
 
-        <div class="col-md-3">
-            <div class="card text-white bg-primary mb-3">
-                <div class="card-body">
-                    <h5>Total de Clientes</h5>
-                    <h2>350</h2>
-                </div>
-            </div>
+ <div class="col-md-3">
+    <div class="card text-white bg-primary mb-3">
+        <div class="card-body">
+            <h5>Total de Clientes</h5>
+            <h2>{{ $totalClientes }}</h2>
         </div>
+    </div>
+</div>
 
-        <div class="col-md-3">
-            <div class="card text-white bg-success mb-3">
-                <div class="card-body">
-                    <h5>Total de Vendas</h5>
-                    <h2>1200</h2>
-                </div>
-            </div>
+<div class="col-md-3">
+    <div class="card text-white bg-success mb-3">
+        <div class="card-body">
+            <h5>Total de Vendas</h5>
+            <h2>{{ $totalVendas }}</h2>
         </div>
+    </div>
+</div>
 
-        <div class="col-md-3">
-            <div class="card text-white bg-warning mb-3">
-                <div class="card-body">
-                    <h5>Produto Mais Vendido</h5>
-                    <h5>Produto X</h5>
-                </div>
-            </div>
+<div class="col-md-3">
+    <div class="card text-white bg-warning mb-3">
+        <div class="card-body">
+            <h5>Produto Mais Vendido</h5>
+            <h5>{{ $produtoMaisVendido->nome ?? 'Nenhum' }}</h5>
         </div>
+    </div>
+</div>
 
         <div class="col-md-3">
             <div class="card text-white bg-danger mb-3">
                 <div class="card-body">
                     <h5>Contatos Hoje</h5>
-                    <h2>5</h2>
+                    <h2>R$ {{ number_format($totalVendas,2,',','.') }}</h2>
                 </div>
             </div>
         </div>
@@ -102,13 +102,17 @@
 
                 <tbody>
 
+                    @foreach($ultimasVendas as $venda)
+
                     <tr>
-                        <td>João</td>
-                        <td>Produto A</td>
-                        <td>100</td>
-                        <td>90</td>
-                        <td>05/05/2024</td>
+                        <td>{{ $venda->cliente->nome ?? '' }}</td>
+                        <td>{{ $venda->produto }}</td>
+                        <td>{{ $venda->valor }}</td>
+                        <td>{{ $venda->valor_total }}</td>
+                        <td>{{ $venda->created_at->format('d/m/Y') }}</td>
                     </tr>
+
+                    @endforeach
 
                     <tr>
                         <td>Maria</td>

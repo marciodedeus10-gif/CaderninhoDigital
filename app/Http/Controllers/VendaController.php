@@ -41,15 +41,20 @@ return redirect()->route('vendas.show',$venda->id);
 
 public function show($id)
 {
+    $venda = Venda::with(['cliente', 'itens.produto'])->findOrFail($id);
 
-$venda = Venda::findOrFail($id);
+    $total = 0;
+    $descontoTotal = 0;
 
-$produtos = Produto::all();
+    foreach ($venda->itens as $item) {
+        $subtotal = $item->preco * $item->quantidade;
+        $subtotalComDesconto = $subtotal - $item->desconto;
 
-$servicos = Servico::all();
+        $total += $subtotalComDesconto;
+        $descontoTotal += $item->desconto;
+    }
 
-return view('vendas.show',compact('venda','produtos','servicos'));
-
+    return view('vendas.show', compact('venda','total','descontoTotal'));
 }
 
 public function addItem(Request $request,$venda)
