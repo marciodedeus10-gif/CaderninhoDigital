@@ -37,21 +37,24 @@ class ClienteController extends Controller
         return view('clientes.create');
     }
 
-    public function store(Request $request)
-    {
-        Cliente::create([
-            'nome' => $request->nome,
-            'bairro' => $request->bairro,
-            'endereco' => $request->endereco,
-            'cep' => $request->cep,
-            'numero' => $request->numero,
-            'telefone' => $request->telefone,
-            'cidade' => $request->cidade
-        ]);
+public function store(Request $request)
+{
+    Cliente::create([
+        'nome' => $request->nome,
+        'telefone' => $request->telefone,
+        'email' => $request->email,
+        'endereco' => $request->endereco,
+        'bairro' => $request->bairro,
+        'cidade' => $request->cidade,
+        'estado' => $request->estado,
+        'cpf_cnpj' => $request->cpf_cnpj,
+        'observacoes' => $request->observacoes,
+        'ativo' => 1
+    ]);
 
-        return redirect()->route('clientes.index')
-            ->with('success', 'Cliente cadastrado com sucesso!');
-    }
+    return redirect()->route('clientes.index')
+        ->with('success', 'Cliente cadastrado com sucesso!');
+}
 
     public function edit(Cliente $cliente)
     {
