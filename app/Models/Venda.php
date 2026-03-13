@@ -8,10 +8,18 @@ class Venda extends Model
 {
 
 protected $fillable = [
+    'user_id',
     'cliente_id',
+    'produto_id',
+    'valor',
+    'desconto',
+    'valor_total',
     'data_venda',
+    'data_vencimento',
+    'observacoes',
     'status',
-    'total'
+    'total',
+    'desconto_total'
 ];
 
 public function cliente()
