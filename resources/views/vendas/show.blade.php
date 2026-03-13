@@ -1,112 +1,88 @@
 @extends('layouts.app')
 
 @section('content')
+    <h2>Venda #{{ $venda->id }}</h2>
 
-<h2>Venda #{{$venda->id}}</h2>
+    Status: {{ $venda->status }}
 
-Status: {{$venda->status}}
+    <hr>
 
-<hr>
+    <h4>Adicionar Produto</h4>
 
+    <form method="POST" action="{{ route('vendas.addItem', $venda->id) }}">
+        @csrf
 
+        <select name="produto_id">
+            <option value="">Selecione</option>
 
-<h4>Adicionar Produto</h4>
+            @foreach ($produtos as $produto)
+                <option value="{{ $produto->id }}">
+                    {{ $produto->nome }}
+                </option>
+            @endforeach
+        </select>
 
-<form method="POST" action="{{ route('vendas.addItem',$venda->id) }}">
+        <input type="number" name="quantidade" placeholder="Quantidade">
 
-@csrf
+        <input type="text" name="preco" placeholder="Preço">
 
-<select name="produto_id">
+        <button class="btn btn-success">
+            Adicionar
+        </button>
+    </form>
 
-<option value="">Selecione</option>
+    <hr>
 
-@foreach($produtos as $produto)
+    <h4>Dados do Cliente</h4>
 
-<option value="{{$produto->id}}">
-{{$produto->nome}}
-</option>
+    <p><strong>Nome:</strong> {{ $venda->cliente->nome }}</p>
+    <p><strong>Telefone:</strong> {{ $venda->cliente->telefone }}</p>
+    <p><strong>Cidade:</strong> {{ $venda->cliente->cidade }}</p>
 
-@endforeach
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Produto</th>
+                <th>Preço</th>
+                <th>Quantidade</th>
+                <th>Subtotal</th>
+                <th>Desconto</th>
+                <th>Total</th>
+            </tr>
+        </thead>
 
-</select>
+        <tbody>
 
-<input type="number" name="quantidade" placeholder="Quantidade">
+            @foreach ($venda->itens as $item)
+                <tr>
+                    <td>{{ $item->produto->nome }}</td>
+                    <td>R$ {{ number_format($item->preco, 2, ',', '.') }}</td>
+                    <td>{{ $item->quantidade }}</td>
+                    <td>
+                        R$ {{ number_format($item->preco * $item->quantidade, 2, ',', '.') }}
+                    </td>
+                    <td>
+                        R$ {{ number_format($item->desconto, 2, ',', '.') }}
+                    </td>
+                    <td>
+                        R$ {{ number_format($item->preco * $item->quantidade - $item->desconto, 2, ',', '.') }}
+                    </td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
 
-<input type="text" name="preco" placeholder="Preço">
+    <div class="card">
+        <div class="card-body">
+            <p><strong>Desconto Total:</strong>
+                R$ {{ number_format($descontoTotal, 2, ',', '.') }}
+            </p>
 
-<button class="btn btn-success">
-Adicionar
-</button>
+            <h4>
+                Total da Venda:
+                R$ {{ number_format($total, 2, ',', '.') }}
+            </h4>
 
-</form>
-
-<hr>
-
-<h4>Dados do Cliente</h4>
-
-<p><strong>Nome:</strong> {{ $venda->cliente->nome }}</p>
-<p><strong>Telefone:</strong> {{ $venda->cliente->telefone }}</p>
-<p><strong>Cidade:</strong> {{ $venda->cliente->cidade }}</p>
-
-
-<table class="table">
-
-<thead>
-<tr>
-<th>Produto</th>
-<th>Preço</th>
-<th>Quantidade</th>
-<th>Subtotal</th>
-<th>Desconto</th>
-<th>Total</th>
-</tr>
-</thead>
-
-<tbody>
-
-@foreach($venda->itens as $item)
-
-<tr>
-
-<td>{{ $item->produto->nome }}</td>
-
-<td>R$ {{ number_format($item->preco,2,',','.') }}</td>
-
-<td>{{ $item->quantidade }}</td>
-
-<td>
-R$ {{ number_format($item->preco * $item->quantidade,2,',','.') }}
-</td>
-
-<td>
-R$ {{ number_format($item->desconto,2,',','.') }}
-</td>
-
-<td>
-R$ {{ number_format(($item->preco * $item->quantidade) - $item->desconto,2,',','.') }}
-</td>
-
-</tr>
-
-@endforeach
-
-</tbody>
-
-</table>
-
-<div class="card">
-
-<div class="card-body">
-
-<p><strong>Desconto Total:</strong>
-R$ {{ number_format($descontoTotal,2,',','.') }}
-</p>
-
-<h4>
-Total da Venda:
-R$ {{ number_format($total,2,',','.') }}
-</h4>
-
-</div>
-
-</div>
+        </div>
+    </div>
+@endsection

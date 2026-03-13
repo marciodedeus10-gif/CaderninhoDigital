@@ -1,30 +1,28 @@
 <h2>Nova Oportunidade</h2>
 
 <form action="{{ route('oportunidades.store') }}" method="POST">
-@csrf
+    @csrf
 
-<label>Cliente</label>
-<select name="cliente_id">
+    <label>Cliente</label>
+    <select name="cliente_id">
 
-@foreach($clientes as $cliente)
+        @foreach ($clientes as $cliente)
+            <option value="{{ $cliente->id }}">
+                {{ $cliente->nome }}
+            </option>
+        @endforeach
 
-<option value="{{ $cliente->id }}">
-{{ $cliente->nome }}
-</option>
+    </select>
 
-@endforeach
+    <label>Tipo</label>
+    <input type="text" name="tipo">
 
-</select>
+    <label>Descrição</label>
+    <textarea name="descricao"></textarea>
 
-<label>Tipo</label>
-<input type="text" name="tipo">
+    <label>Data de contato</label>
+    <input type="date" name="data_contato">
 
-<label>Descrição</label>
-<textarea name="descricao"></textarea>
-
-<label>Data de contato</label>
-<input type="date" name="data_contato">
-
-<button type="submit">Salvar</button>
+    <button type="submit">Salvar</button>
 
 </form>

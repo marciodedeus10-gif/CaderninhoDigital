@@ -7,7 +7,6 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\VendaController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ContatoController;
-use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\UserController;
 
@@ -35,7 +34,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::resource('clientes', ClienteController::class);
 Route::resource('contatos', ContatoController::class);
-Route::resource('empresas', EmpresaController::class);
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');

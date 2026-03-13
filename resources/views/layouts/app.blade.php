@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Caderninho Digital</title>
 
@@ -8,125 +9,128 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
     <link href="{{ asset('css/topbar.css') }}" rel="stylesheet">
     <style>
-    .menu {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
+        .menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
 
-.menu > li {
-    position: relative;
-    display: inline-block;
-}
+        .menu>li {
+            position: relative;
+            display: inline-block;
+        }
 
-.menu a {
-    display: block;
-    padding: 10px 15px;
-    text-decoration: none;
-    background-color: #2c3e50;
-    color: white;
-}
+        .menu a {
+            display: block;
+            padding: 10px 15px;
+            text-decoration: none;
+            background-color: #2c3e50;
+            color: white;
+        }
 
-.menu a:hover {
-    background-color: #34495e;
-}
+        .menu a:hover {
+            background-color: #34495e;
+        }
 
-/* Submenu */
-.submenu {
-    display: none;
-    position: absolute;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    min-width: 150px;
-}
+        /* Submenu */
+        .submenu {
+            display: none;
+            position: absolute;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            min-width: 150px;
+        }
 
-.submenu li a {
-    background-color: #34495e;
-}
+        .submenu li a {
+            background-color: #34495e;
+        }
 
-/* MOSTRA AO PASSAR O MOUSE */
-.dropdown:hover .submenu {
-    display: block;
-}
-</style>
+        /* MOSTRA AO PASSAR O MOUSE */
+        .dropdown:hover .submenu {
+            display: block;
+        }
+    </style>
 
-</head>
-<body>
-
-<!DOCTYPE html>
-<html lang="pt-br">
-
-<head>
-    <meta charset="UTF-8">
-    <title>Caderninho Digital</title>
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
 </head>
 
 <body>
 
-<div class="container-fluid">
-    <div class="row">
+    <!DOCTYPE html>
+    <html lang="pt-br">
 
-        <!-- MENU LATERAL -->
-        <div class="col-md-2 bg-dark text-white min-vh-100 p-3">
+    <head>
+        <meta charset="UTF-8">
+        <title>Caderninho Digital</title>
 
-            <h4 class="text-center">Caderninho Digital</h4>
-            <hr>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    </head>
 
-            <ul class="nav flex-column">
+    <body>
 
-                <li class="nav-item mb-2">
-                    <a href="/dashboard" class="nav-link text-white">
-                        🏠 Dashboard
-                    </a>
-                </li>
+        <div class="container-fluid">
+            <div class="row">
 
-                <li class="nav-item mb-2">
-                    <a href="/clientes" class="nav-link text-white">
-                        👥 Clientes
-                    </a>
-                </li>
+                <!-- MENU LATERAL -->
+                <div class="col-md-2 bg-dark text-white min-vh-100 p-3">
 
-                <li class="nav-item mb-2">
-                    <a href="/vendas" class="nav-link text-white">
-                        💰 Vendas
-                    </a>
-                </li>
+                    <h4 class="text-center">Caderninho Digital</h4>
+                    <hr>
 
-                <li class="nav-item mb-2">
-                    <a href="/produtos" class="nav-link text-white">
-                        📦 Produtos
-                    </a>
-                </li>
+                    <ul class="nav flex-column">
 
-                <li class="nav-item mb-2">
-                    <a href="/servicos" class="nav-link text-white">
-                        🛠 Serviços
-                    </a>
-                </li>
+                        <li class="nav-item mb-2">
+                            <a href="/dashboard" class="nav-link text-white">
+                                🏠 Dashboard
+                            </a>
+                        </li>
 
-            </ul>
+                        <li class="nav-item mb-2">
+                            <a href="/clientes" class="nav-link text-white">
+                                👥 Clientes
+                            </a>
+                        </li>
 
+                        <li class="nav-item mb-2">
+                            <a href="/vendas" class="nav-link text-white">
+                                💰 Vendas
+                            </a>
+                        </li>
+
+                        <li class="nav-item mb-2">
+                            <a href="/produtos" class="nav-link text-white">
+                                📦 Produtos
+                            </a>
+                        </li>
+
+                        <li class="nav-item mb-2">
+                            <a href="/servicos" class="nav-link text-white">
+                                🛠 Serviços
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+                <!-- CONTEÚDO -->
+                <div class="col-md-10 p-4">
+
+                    @yield('content')
+
+                </div>
+
+            </div>
         </div>
 
-        <!-- CONTEÚDO -->
-        <div class="col-md-10 p-4">
+    </body>
 
-            @yield('content')
+    </html>
 
-        </div>
 
-    </div>
-</div>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
-</html>
 
-
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-</body>
 </html>

@@ -46,7 +46,7 @@ class User extends Authenticatable
         ];
     }
     public function vendas()
-{
-    return $this->hasMany(Venda::class);
-}
+    {
+        return $this->hasMany(Venda::class);
+    }
 }

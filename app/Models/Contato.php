@@ -6,20 +6,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class Cliente extends Model
 {
-protected $fillable = [
-'nome',
-'bairro',
-'endereco',
-'cep',
-'numero',
-'telefone',
-'cidade',
-'estado',
-'ativo'
-];
+    protected $fillable = [
+        'nome',
+        'bairro',
+        'endereco',
+        'cep',
+        'numero',
+        'telefone',
+        'cidade',
+        'estado',
+        'ativo'
+    ];
 
-public function vendas()
-{
-    return $this->hasMany(Venda::class);
-}
+    public function vendas()
+    {
+        return $this->hasMany(Venda::class);
+    }
 }
