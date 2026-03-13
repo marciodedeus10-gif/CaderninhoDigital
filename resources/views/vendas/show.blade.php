@@ -85,4 +85,109 @@
 
         </div>
     </div>
+
+    <!-- MODAL PRODUTO -->
+<div class="modal fade" id="modalProduto">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5>Adicionar Produto</h5>
+            </div>
+
+            <form method="POST" action="{{ route('vendas.addItem', $venda->id) }}">
+                @csrf
+
+                <div class="modal-body">
+
+                    <label>Pesquisar Produto</label>
+                    <input type="text" id="buscarProduto" class="form-control mb-2" placeholder="Digite o nome">
+
+                    <select name="produto_id" id="produtoSelect" class="form-control">
+                        <option value="">Selecione</option>
+
+                        @foreach ($produtos as $produto)
+                            <option
+                                value="{{ $produto->id }}"
+                                data-preco="{{ $produto->preco_venda }}"
+                            >
+                                {{ $produto->nome }}
+                            </option>
+                        @endforeach
+                    </select>
+
+                    <br>
+
+                    <label>Preço</label>
+                    <input type="text" name="preco" id="precoProduto" class="form-control">
+
+                    <br>
+
+                    <label>Quantidade</label>
+                    <input type="number" name="quantidade" class="form-control">
+
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-success">
+                        Adicionar Produto
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<!-- MODAL SERVIÇO -->
+<div class="modal fade" id="modalServico">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5>Adicionar Serviço</h5>
+            </div>
+
+            <form method="POST" action="{{ route('vendas.addServico', $venda->id) }}">
+                @csrf
+
+                <div class="modal-body">
+
+                    <select name="servico_id" class="form-control">
+                        <option value="">Selecione</option>
+
+                        @foreach ($servicos as $servico)
+                            <option
+                                value="{{ $servico->id }}"
+                                data-preco="{{ $servico->preco }}"
+                            >
+                                {{ $servico->nome }}
+                            </option>
+                        @endforeach
+                    </select>
+
+                    <br>
+
+                    <label>Preço</label>
+                    <input type="text" name="preco" id="precoServico" class="form-control">
+
+                    <br>
+
+                    <label>Quantidade</label>
+                    <input type="number" name="quantidade" class="form-control">
+
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-success">
+                        Adicionar Serviço
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
 @endsection

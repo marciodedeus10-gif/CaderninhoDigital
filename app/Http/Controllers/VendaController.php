@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Venda;
 use App\Models\Cliente;
 use App\Models\Produto;
-//use App\Models\Servico;
+use App\Models\Servico;
 use App\Models\ItemVenda;
 use Illuminate\Http\Request;
 
@@ -46,23 +46,24 @@ class VendaController extends Controller
 
     public function show($id)
     {
-        $venda = Venda::with(['cliente', 'itens.produto', 'itens.servico'])->findOrFail($id);
+        $venda = Venda::with(['cliente', 'itens.produto'])->findOrFail($id);
+
         $produtos = Produto::all();
+        $servicos = Servico::all();
 
-        $itens = ItemVenda::where('venda_id', $id)->get(); // itens da venda
+        $descontoTotal = $venda->itens->sum('desconto');
 
-        $total = 0;
-        $descontoTotal = 0;
+        $total = $venda->itens->sum(function ($item) {
+            return ($item->preco * $item->quantidade) - $item->desconto;
+        });
 
-        foreach ($venda->itens as $item) {
-            $subtotal = $item->preco * $item->quantidade;
-            $subtotalComDesconto = $subtotal - $item->desconto;
-
-            $total += $subtotalComDesconto;
-            $descontoTotal += $item->desconto;
-        }
-
-        return view('vendas.show', compact('venda', 'total', 'descontoTotal', 'produtos'));
+        return view('vendas.show', compact(
+            'venda',
+            'produtos',
+            'servicos',
+            'descontoTotal',
+            'total'
+        ));
     }
 
     public function addItem(Request $request, Venda $venda)
