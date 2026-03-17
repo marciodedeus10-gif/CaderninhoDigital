@@ -84,5 +84,29 @@ class VendaController extends Controller
         $venda->total += $subtotalComDesconto;
         $venda->desconto_total += $request->desconto;
         $venda->save();
+
+        return redirect()->route('vendas.show', $venda->id);
+    }
+
+    public function addServico(Request $request, Venda $venda)
+    {
+        $subtotal = $request->quantidade * $request->preco;
+        $subtotalComDesconto = $subtotal - $request->desconto;
+
+        ItemVenda::create([
+            'venda_id' => $venda->id,
+            'produto_id' => null,
+            'servico_id' => $request->servico_id,
+            'quantidade' => $request->quantidade,
+            'preco' => $request->preco,
+            'desconto' => $request->desconto,
+            'subtotal' => $subtotalComDesconto
+        ]);
+
+        $venda->total += $subtotalComDesconto;
+        $venda->desconto_total += $request->desconto;
+        $venda->save();
+
+        return redirect()->route('vendas.show', $venda->id);
     }
 }
