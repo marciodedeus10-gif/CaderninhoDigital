@@ -49,3 +49,5 @@ Route::delete('/perfil/delete', [UserController::class, 'destroy'])->name('perfi
 Route::resource('vendas', VendaController::class);
 Route::post('vendas/{venda}/item', [VendaController::class,'addItem'])->name('vendas.addItem');
 Route::post('vendas/{venda}/status', [VendaController::class,'status'])->name('vendas.status');
+
+Route::get('/vendas', [VendaController::class, 'index']);
