@@ -38,7 +38,7 @@ Route::resource('contatos', ContatoController::class);
 
 Route::get('/dashboard', function () {
     return view('dashboard');
-});
+})->name('dashboard');
 
 
 Route::get('/perfil', [UserController::class, 'show'])->name('perfil.show');

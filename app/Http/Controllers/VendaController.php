@@ -45,7 +45,7 @@ class VendaController extends Controller
 
     public function show($id)
     {
-        $venda = Venda::with('itens', 'itens.produtos', 'itens.servicos')->findOrFail($id);
+        $venda = Venda::with('itens', 'itens.produto', 'itens.servico')->findOrFail($id);
 
         $descontoTotal = $venda->itens->sum('desconto');
         $total = $venda->itens->sum('subtotal');
