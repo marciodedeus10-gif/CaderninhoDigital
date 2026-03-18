@@ -51,4 +51,4 @@ Route::post('vendas/{venda}/item', [VendaController::class,'addItem'])->name('ve
 Route::post('vendas/{venda}/addServico', [VendaController::class,'addServico'])->name('vendas.addServico');
 Route::post('vendas/{venda}/status', [VendaController::class,'status'])->name('vendas.status');
 
-Route::get('/vendas', [VendaController::class, 'index']);
+Route::get('/vendas', [VendaController::class, 'index'])->name('vendas.index');

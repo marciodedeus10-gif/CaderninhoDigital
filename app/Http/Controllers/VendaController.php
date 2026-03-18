@@ -26,12 +26,18 @@ class VendaController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate([
+            'cliente_id' => 'required|exists:clientes,id',
+            'data_venda' => 'required|date',
+        ]);
+
         $venda = Venda::create([
             'cliente_id' => $request->cliente_id,
             'user_id' => auth()->id(),
             'data_venda' => $request->data_venda,
             'data_vencimento' => $request->data_vencimento,
             'observacoes' => $request->observacoes,
+            'status' => 'aberta',
         ]);
 
         return redirect()->route('vendas.show', $venda->id)->with('success', 'Venda criada com sucesso!');

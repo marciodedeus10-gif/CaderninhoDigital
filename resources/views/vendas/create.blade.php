@@ -1,35 +1,77 @@
 @extends('layouts.app')
 
 @section('content')
-    <h2>Nova Venda</h2>
+<div class="container mt-4">
 
-    <form action="{{ route('vendas.store') }}" method="POST">
+    <div class="card shadow">
+        <div class="card-header bg-success text-white">
+            <h4 class="mb-0">Nova Venda</h4>
+        </div>
 
-        @csrf
+        <div class="card-body">
+            <form action="{{ route('vendas.store') }}" method="POST">
+                @csrf
 
-        <label>Cliente</label>
+                <div class="row">
 
-        <select name="cliente_id" class="form-control">
+                    {{-- Cliente --}}
+                    <div class="col-md-8 mb-3">
+                        <label class="form-label">Cliente</label>
+                        <select name="cliente_id"
+                                class="form-control @error('cliente_id') is-invalid @enderror">
 
-            @foreach ($clientes as $cliente)
-                <option value="{{ $cliente->id }}">{{ $cliente->nome }}</option>
-            @endforeach
+                            <option value="">Selecione um cliente</option>
 
-        </select>
+                            @foreach ($clientes as $cliente)
+                                <option value="{{ $cliente->id }}"
+                                    {{ old('cliente_id') == $cliente->id ? 'selected' : '' }}>
+                                    {{ $cliente->nome }}
+                                </option>
+                            @endforeach
 
-        <input type="date" name="data_venda" class="form-control"><br><br>
+                        </select>
 
-        <br>
+                        @error('cliente_id')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
 
-        <a href="{{ route('clientes.create') }}" class="btn btn-secondary">
-            Cadastrar Cliente
-        </a>
+                    {{-- Botão cadastrar cliente --}}
+                    <div class="col-md-4 mb-3 d-flex align-items-end">
+                        <a href="{{ route('clientes.create') }}" class="btn btn-outline-secondary w-100">
+                            ➕ Novo Cliente
+                        </a>
+                    </div>
 
-        <br><br>
+                    {{-- Data da venda --}}
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Data da Venda</label>
+                        <input type="date" name="data_venda"
+                               class="form-control @error('data_venda') is-invalid @enderror"
+                               value="{{ old('data_venda', date('Y-m-d')) }}">
 
-        <button class="btn btn-primary">
-            Criar Venda
-        </button>
+                        @error('data_venda')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
 
-    </form>
+                </div>
+
+                <hr>
+
+                <div class="d-flex justify-content-between">
+                    <a href="{{ route('vendas.index') }}" class="btn btn-secondary">
+                        ← Voltar
+                    </a>
+
+                    <button type="submit" class="btn btn-success">
+                        💾 Criar Venda
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+</div>
 @endsection
