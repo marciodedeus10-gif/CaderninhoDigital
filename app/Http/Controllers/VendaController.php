@@ -67,9 +67,32 @@ class VendaController extends Controller
         return view('vendas.show', compact('venda'));
     }
 
-    public function destroy($id)
+        $venda->total += $subtotalComDesconto;
+        $venda->desconto_total += $request->desconto;
+        $venda->save();
+
+        return redirect()->route('vendas.show', $venda->id);
+    }
+
+    public function addServico(Request $request, Venda $venda)
     {
-        Venda::destroy($id);
-        return redirect()->route('vendas.index');
+        $subtotal = $request->quantidade * $request->preco;
+        $subtotalComDesconto = $subtotal - $request->desconto;
+
+        ItemVenda::create([
+            'venda_id' => $venda->id,
+            'produto_id' => null,
+            'servico_id' => $request->servico_id,
+            'quantidade' => $request->quantidade,
+            'preco' => $request->preco,
+            'desconto' => $request->desconto,
+            'subtotal' => $subtotalComDesconto
+        ]);
+
+        $venda->total += $subtotalComDesconto;
+        $venda->desconto_total += $request->desconto;
+        $venda->save();
+
+        return redirect()->route('vendas.show', $venda->id);
     }
 }

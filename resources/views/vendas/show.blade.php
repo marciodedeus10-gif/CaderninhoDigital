@@ -9,24 +9,6 @@
 
     <h4>Dados do Cliente</h4>
 
-    <p><strong>Nome:</strong> {{ $venda->cliente->nome }}</p>
-    <p><strong>Telefone:</strong> {{ $venda->cliente->telefone }}</p>
-    <p><strong>Cidade:</strong> {{ $venda->cliente->cidade }}</p>
-
-    <hr>
-
-    <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#modalProduto">
-        Adicionar Produto
-    </button>
-
-    <button class="btn btn-secondary mb-3" data-bs-toggle="modal" data-bs-target="#modalServico">
-        Adicionar Serviço
-    </button>
-
-    <hr>
-
-    <h4>Produtos da Venda</h4>
-
     <table class="table table-bordered">
 
         <thead>
@@ -42,7 +24,9 @@
 
         <tbody>
 
-            @foreach ($venda->itens as $item)
+            @foreach ($venda->itens->filter(function ($item) {
+                return !is_null($item->produto_id);
+            }) as $item)
                 <tr>
 
                     <td>{{ $item->produto->nome }}</td>
@@ -74,43 +58,48 @@
 
     </table>
 
-    <hr>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalProduto">
+        Adicionar Produto
+    </button>
 
-    <h4>Serviços da Venda</h4>
-
-    <table class="table table-bordered">
-
+    <table class="table">
         <thead>
             <tr>
                 <th>Serviço</th>
                 <th>Preço</th>
                 <th>Quantidade</th>
+                <th>Subtotal</th>
+                <th>Desconto</th>
+                <th>Total</th>
             </tr>
         </thead>
 
         <tbody>
 
-            @foreach ($venda->servicos as $servico)
+            @foreach ($venda->itens->filter(function ($item) {
+                return !is_null($item->servico_id);
+            }) as $item)
                 <tr>
-
-                    <td>{{ $servico->nome }}</td>
-
+                    <td>{{ $item->servico->nome }}</td>
+                    <td>R$ {{ number_format($item->preco, 2, ',', '.') }}</td>
+                    <td>{{ $item->quantidade }}</td>
                     <td>
-                        R$ {{ number_format($servico->pivot->preco, 2, ',', '.') }}
+                        R$ {{ number_format($item->preco * $item->quantidade, 2, ',', '.') }}
                     </td>
-
                     <td>
-                        {{ $servico->pivot->quantidade }}
+                        R$ {{ number_format($item->desconto, 2, ',', '.') }}
                     </td>
-
+                    <td>
+                        R$ {{ number_format($item->preco * $item->quantidade - $item->desconto, 2, ',', '.') }}
+                    </td>
                 </tr>
             @endforeach
-
         </tbody>
-
     </table>
 
-    <hr>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalServico">
+        Adicionar Serviço
+    </button>
 
     <div class="card">
 
