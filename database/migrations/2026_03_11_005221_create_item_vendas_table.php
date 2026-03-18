@@ -8,24 +8,14 @@ return new class extends Migration
 {
 public function up()
 {
-    Schema::create('item_vendas', function (Blueprint $table) {
-
+    Schema::create('itens_venda', function (Blueprint $table) {
         $table->id();
-
         $table->foreignId('venda_id')->constrained()->cascadeOnDelete();
-
-        $table->foreignId('produto_id')->nullable()->constrained()->nullOnDelete();
-
-        $table->foreignId('servico_id')->nullable()->constrained()->nullOnDelete();
-
+        $table->foreignId('produto_id')->constrained()->cascadeOnDelete();
         $table->integer('quantidade');
-
-        $table->decimal('preco',10,2);
-
-        $table->decimal('subtotal',10,2);
-
+        $table->decimal('valor_unitario', 10, 2);
+        $table->decimal('subtotal', 10, 2);
         $table->timestamps();
-
     });
 }
 };
