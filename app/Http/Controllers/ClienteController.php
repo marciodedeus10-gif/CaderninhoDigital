@@ -47,6 +47,8 @@ public function store(Request $request)
         'bairro' => $request->bairro,
         'cidade' => $request->cidade,
         'estado' => $request->estado,
+        'cep' => $request->cep,
+        'numero' => $request->numero,
         'cpf_cnpj' => $request->cpf_cnpj,
         'observacoes' => $request->observacoes,
         'ativo' => 1

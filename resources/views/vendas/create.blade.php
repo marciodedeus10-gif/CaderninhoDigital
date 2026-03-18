@@ -1,60 +1,35 @@
-<form method="POST" action="{{ route('vendas.store') }}">
-    @csrf
+@extends('layouts.app')
 
-    <label>Cliente</label>
-    <select name="cliente_id" required>
-        @foreach($clientes as $cliente)
-            <option value="{{ $cliente->id }}">{{ $cliente->nome }}</option>
-        @endforeach
-    </select>
+@section('content')
+    <h2>Nova Venda</h2>
 
-    <hr>
+    <form action="{{ route('vendas.store') }}" method="POST">
 
-    <h4>Produtos</h4>
+        @csrf
 
-    <div id="produtos">
-        <div class="item">
-            <select name="produtos[]">
-                @foreach($produtos as $produto)
-                    <option value="{{ $produto->id }}">
-                        {{ $produto->nome }} - R$ {{ $produto->preco }}
-                    </option>
-                @endforeach
-            </select>
+        <label>Cliente</label>
 
-            <input type="number" name="quantidades[]" placeholder="Qtd">
-        </div>
-    </div>
+        <select name="cliente_id" class="form-control">
 
-    <button type="button" onclick="addProduto()">+ Adicionar Produto</button>
-
-    <hr>
-
-    <label>Data Venda</label>
-    <input type="date" name="data_venda">
-
-    <label>Data Vencimento</label>
-    <input type="date" name="data_vencimento">
-
-    <textarea name="observacoes" placeholder="Observações"></textarea>
-
-    <button type="submit">Salvar</button>
-</form>
-
-<script>
-function addProduto() {
-    let div = document.createElement('div');
-    div.innerHTML = `
-        <select name="produtos[]">
-            @foreach($produtos as $produto)
-                <option value="{{ $produto->id }}">
-                    {{ $produto->nome }} - R$ {{ $produto->preco }}
-                </option>
+            @foreach ($clientes as $cliente)
+                <option value="{{ $cliente->id }}">{{ $cliente->nome }}</option>
             @endforeach
+
         </select>
 
-        <input type="number" name="quantidades[]" placeholder="Qtd">
-    `;
-    document.getElementById('produtos').appendChild(div);
-}
-</script>
+        <input type="date" name="data_venda" class="form-control"><br><br>
+
+        <br>
+
+        <a href="{{ route('clientes.create') }}" class="btn btn-secondary">
+            Cadastrar Cliente
+        </a>
+
+        <br><br>
+
+        <button class="btn btn-primary">
+            Criar Venda
+        </button>
+
+    </form>
+@endsection

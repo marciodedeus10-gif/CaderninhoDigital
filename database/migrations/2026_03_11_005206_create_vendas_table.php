@@ -18,6 +18,7 @@ public function up()
         $table->date('data_vencimento')->nullable();
         $table->string('status')->default('pendente');
         $table->text('observacoes')->nullable();
+        $table->decimal('total',10,2)->default(0);
         $table->timestamps();
     });
 }

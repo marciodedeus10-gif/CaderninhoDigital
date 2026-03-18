@@ -16,6 +16,10 @@
 
             <input type="text" name="endereco" placeholder="Endereço"><br><br>
 
+            <input type="text" name="numero" placeholder="Número"><br><br>
+
+            <input type="text" name="cep" placeholder="CEP"><br><br>
+
             <input type="text" name="bairro" placeholder="Bairro"><br><br>
 
             <input type="text" name="cidade" placeholder="Cidade"><br><br>

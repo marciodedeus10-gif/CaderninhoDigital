@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Venda extends Model
 {
+    protected $table = 'vendas';
+
     protected $fillable = [
         'user_id',
         'cliente_id',
-        'produto_id',
         'valor',
         'desconto',
         'valor_total',
