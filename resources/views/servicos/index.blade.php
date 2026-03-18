@@ -9,7 +9,7 @@
         Novo Serviço
     </a>
 
-    
+
 
     @if(session('success'))
         <div class="alert alert-success">
@@ -35,12 +35,14 @@
                 <td>{{ $servico->categoria }}</td>
                 <td>{{ $servico->validade_dias }} dias</td>
                 <td>
-                    <a href="{{ route('servicos.edit', $servico) }}" class="btn btn-primary btn-sm">Editar</a>
-
-                    <form action="{{ route('servicos.destroy', $servico) }}" method="POST" style="display:inline;">
+                    <form action="{{ route('vendas.removeItem', $item->id) }}" method="POST">
                         @csrf
                         @method('DELETE')
-                        <button class="btn btn-danger btn-sm">Excluir</button>
+
+                        <button class="btn btn-sm btn-danger"
+                            onclick="return confirm('Remover item?')">
+                            🗑️
+                        </button>
                     </form>
                 </td>
             </tr>

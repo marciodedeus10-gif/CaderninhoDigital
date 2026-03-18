@@ -99,4 +99,29 @@ class VendaController extends Controller
 
         return redirect()->route('vendas.show', $venda->id)->with('success', 'Serviço adicionado com sucesso!');
     }
+
+    public function removeItem($id)
+    {
+        $item = ItemVenda::findOrFail($id);
+        $vendaId = $item->venda_id;
+
+        $item->delete();
+
+        return redirect()->route('vendas.show', $vendaId)
+            ->with('success', 'Item removido!');
+    }
+
+    public function updateItem(Request $request, $id)
+    {
+        $item = ItemVenda::findOrFail($id);
+
+        $request->validate([
+            'quantidade' => 'required|integer|min:1'
+        ]);
+
+        $item->quantidade = $request->quantidade;
+        $item->save();
+
+        return back()->with('success', 'Quantidade atualizada!');
+    }
 }

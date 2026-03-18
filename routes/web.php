@@ -52,3 +52,9 @@ Route::post('vendas/{venda}/addServico', [VendaController::class,'addServico'])-
 Route::post('vendas/{venda}/status', [VendaController::class,'status'])->name('vendas.status');
 
 Route::get('/vendas', [VendaController::class, 'index'])->name('vendas.index');
+
+Route::delete('/vendas/item/{id}', [VendaController::class, 'removeItem'])
+    ->name('vendas.removeItem');
+
+Route::put('/vendas/item/{id}', [VendaController::class, 'updateItem'])
+    ->name('vendas.updateItem');
