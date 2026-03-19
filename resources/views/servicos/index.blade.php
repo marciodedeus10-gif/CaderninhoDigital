@@ -35,7 +35,7 @@
                 <td>{{ $servico->categoria }}</td>
                 <td>{{ $servico->validade_dias }} dias</td>
                 <td>
-                    <form action="{{ route('vendas.removeItem', $item->id) }}" method="POST">
+                    <form action="{{ route('servicos.destroy', $servico->id) }}" method="POST">
                         @csrf
                         @method('DELETE')
 
