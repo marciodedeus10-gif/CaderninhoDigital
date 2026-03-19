@@ -1,20 +1,64 @@
-<a href="{{ route('contatos.create') }}">Novo Contato</a>
+@extends('layouts.app')
 
-@foreach ($contatos as $contato)
-    <div style="margin-bottom: 10px;">
-        <strong>{{ $contato->nome }}</strong> - {{ $contato->telefone ?? 'Não informado' }}
+@section('content')
+<div class="container mt-4">
 
-        <br>
+    <div class="card shadow">
+        <div class="card-header bg-dark text-white d-flex justify-content-between">
+            <h4 class="mb-0">Mensagens</h4>
+            <a href="{{ route('contatos.create') }}" class="btn btn-success btn-sm">
+                Nova Mensagem
+            </a>
+        </div>
 
-        <a href="{{ route('contatos.edit', $contato) }}">Editar</a>
+        <div class="card-body">
 
-        <form action="{{ route('contatos.destroy', $contato) }}" method="POST" style="display:inline;">
-            @csrf
-            @method('DELETE')
-            <button type="submit">Excluir</button>
-        </form>
-        <button type="submit" onclick="return confirm('Tem certeza?')">
-            Excluir
-        </button>
+            @if(session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Email</th>
+                        <th>Assunto</th>
+                        <th>Mensagem</th>
+                        <th width="120">Ações</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @forelse($contatos as $contato)
+                    <tr>
+                        <td>{{ $contato->nome }}</td>
+                        <td>{{ $contato->email }}</td>
+                        <td>{{ $contato->assunto }}</td>
+                        <td>{{ Str::limit($contato->mensagem, 50) }}</td>
+                        <td>
+                            <form action="{{ route('contatos.destroy', $contato) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+
+                                <button class="btn btn-danger btn-sm">
+                                    Excluir
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="5" class="text-center">
+                            Nenhuma mensagem encontrada
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+
+            </table>
+        </div>
     </div>
-@endforeach
+</div>
+@endsection

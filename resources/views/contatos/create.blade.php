@@ -1,54 +1,88 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mt-4">
+<div class="container mt-5">
 
-    <div class="card shadow">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
 
-        <div class="card-header bg-success text-white">
-            <h4 class="mb-0">Novo Contato</h4>
-        </div>
+            <div class="card border-0 shadow-lg rounded-4">
 
-        <div class="card-body">
-
-            <form action="{{ route('contatos.store') }}" method="POST">
-                @csrf
-
-                <div class="row">
-
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Nome</label>
-                        <input type="text" name="nome" class="form-control" placeholder="Digite o nome">
-                    </div>
-
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Telefone</label>
-                        <input type="text" name="telefone" class="form-control" placeholder="Digite o telefone">
-                    </div>
-
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Email</label>
-                        <input type="email" name="email" class="form-control" placeholder="Digite o email">
-                    </div>
-
-                    <div class="col-md-12 mb-3">
-                        <label class="form-label">Observação</label>
-                        <textarea name="observacao" class="form-control" rows="3" placeholder="Observações"></textarea>
-                    </div>
-
+                {{-- HEADER --}}
+                <div class="card-header bg-success text-white rounded-top-4">
+                    <h4 class="mb-0">
+                        📩 Fale com a gente
+                    </h4>
+                    <small>Envie sua mensagem para nossa equipe</small>
                 </div>
 
-                <div class="d-flex justify-content-between">
-                    <a href="{{ route('contatos.index') }}" class="btn btn-secondary">
-                        Voltar
-                    </a>
+                {{-- BODY --}}
+                <div class="card-body p-4">
 
-                    <button type="submit" class="btn btn-success">
-                        Salvar
-                    </button>
+                    @if(session('success'))
+                        <div class="alert alert-success rounded-3">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
+                    <form action="{{ route('contatos.store') }}" method="POST">
+                        @csrf
+
+                        <div class="row g-3">
+
+                            {{-- NOME --}}
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Nome</label>
+                                <input type="text" name="nome"
+                                    class="form-control rounded-3 shadow-sm"
+                                    placeholder="Digite seu nome" required>
+                            </div>
+
+                            {{-- EMAIL --}}
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Email</label>
+                                <input type="email" name="email"
+                                    class="form-control rounded-3 shadow-sm"
+                                    placeholder="Digite seu email" required>
+                            </div>
+
+                            {{-- ASSUNTO --}}
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Assunto</label>
+                                <input type="text" name="assunto"
+                                    class="form-control rounded-3 shadow-sm"
+                                    placeholder="Ex: Dúvida, suporte, erro no sistema">
+                            </div>
+
+                            {{-- MENSAGEM --}}
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Mensagem</label>
+                                <textarea name="mensagem" rows="4"
+                                    class="form-control rounded-3 shadow-sm"
+                                    placeholder="Digite sua mensagem..." required></textarea>
+                            </div>
+
+                        </div>
+
+                        {{-- BOTÕES --}}
+                        <div class="d-flex justify-content-between mt-4">
+
+                            <a href="{{ route('contatos.index') }}"
+                               class="btn btn-outline-secondary px-4 rounded-3">
+                                ← Voltar
+                            </a>
+
+                            <button type="submit"
+                                    class="btn btn-success px-4 rounded-3 shadow-sm">
+                                Enviar 🚀
+                            </button>
+
+                        </div>
+
+                    </form>
                 </div>
 
-            </form>
+            </div>
 
         </div>
     </div>

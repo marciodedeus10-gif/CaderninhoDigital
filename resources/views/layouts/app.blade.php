@@ -86,7 +86,13 @@
                         </li>
 
                         <li class="nav-item mb-2">
-                            <a href="/clientes" class="nav-link text-white">
+                            <a href="{{ route('contatos.index') }}" class="nav-link text-white">
+                                📩 Contatos
+                            </a>
+                        </li>
+
+                        <li class="nav-item mb-2">
+                            <a href="{{ route('clientes.index') }}" class="nav-link text-white">
                                 👥 Clientes
                             </a>
                         </li>
