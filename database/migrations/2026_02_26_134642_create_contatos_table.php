@@ -8,15 +8,20 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    public function up(): void
+    public function up()
     {
         Schema::create('contatos', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('cliente_id')->constrained()->onDelete('cascade');
-            $table->string('tipo');
-            $table->text('descricao')->nullable();
-            $table->date('data');
+            $table->string('nome');
+            $table->string('telefone')->nullable();
+            $table->string('email')->nullable();
+            $table->text('observacao')->nullable();
             $table->timestamps();
         });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('contatos');
     }
 };

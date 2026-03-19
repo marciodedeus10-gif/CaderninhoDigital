@@ -7,59 +7,48 @@ use Illuminate\Http\Request;
 
 class ContatoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $contatos = Contato::all();
+        return view('contatos.index', compact('contatos'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return view('contatos.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        Contato::create($request->all());
+
+        return redirect()->route('contatos.index')
+            ->with('success', 'Contato cadastrado com sucesso!');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Contato $contato)
     {
-        //
+        return view('contatos.show', compact('contato'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Contato $contato)
     {
-        //
+        return view('contatos.edit', compact('contato'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Contato $contato)
     {
-        //
+        $contato->update($request->all());
+
+        return redirect()->route('contatos.index')
+            ->with('success', 'Contato atualizado!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Contato $contato)
     {
-        //
+        $contato->delete();
+
+        return redirect()->route('contatos.index')
+            ->with('success', 'Contato excluído!');
     }
 }

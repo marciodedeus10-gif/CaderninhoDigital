@@ -8,14 +8,9 @@ class Cliente extends Model
 {
     protected $fillable = [
         'nome',
-        'bairro',
-        'endereco',
-        'cep',
-        'numero',
         'telefone',
-        'cidade',
-        'estado',
-        'ativo'
+        'email',
+        'observacao'
     ];
 
     public function vendas()
