@@ -33,6 +33,7 @@
                 <table class="table table-hover mb-0 text-center">
                     <thead class="table-light">
                         <tr>
+                            <th>Ações</th>
                             <th>Produto</th>
                             <th>Preço</th>
                             <th>Qtd</th>
@@ -45,30 +46,44 @@
                     <tbody>
                         @forelse ($venda->itens->whereNotNull('produto_id') as $item)
                             <tr>
-                                <td>{{ $item->produto->nome }}</td>
-                                <td>R$ {{ number_format($item->preco, 2, ',', '.') }}</td>
-                                <td>{{ $item->quantidade }}</td>
+
+                                {{-- AÇÕES --}}
                                 <td>
-                                    @if ($venda->status == 'aberta')
-                                        <form action="{{ route('vendas.updateItem', $item->id) }}" method="POST"
-                                            class="d-flex justify-content-center">
-                                            @csrf
-                                            @method('PUT')
+                                    @csrf
+                                    @method('DELETE')
 
-                                            <input type="number" name="quantidade" value="{{ $item->quantidade }}"
-                                                class="form-control form-control-sm me-2" style="width: 70px">
-
-                                            <button class="btn btn-sm btn-success">
-                                                ✔
-                                            </button>
-                                        </form>
-                                    @else
-                                        {{ $item->quantidade }}
-                                    @endif
+                                    <button class="btn btn-danger btn-sm">
+                                        🗑
+                                    </button>
+                                    </form>
                                 </td>
-                            @empty
+
+                                {{-- PRODUTO --}}
+                                <td>{{ $item->produto->nome }}</td>
+
+                                <p class="mb-1">
+                                    <strong>Desconto Total:</strong>
+                                    <span class="text-danger">R$ 0,00</span>
+                                </p>
+
+                                <h3 class="text-success">
+                                    Total: R$ <span id="total-geral">0.00</span>
+                                </h3>
+
+                                {{-- DESCONTO --}}
+                                <td>
+                                    <input type="number" class="form-control desconto" value="0" step="0.01">
+                                </td>
+
+                                {{-- TOTAL --}}
+                                <td class="total-item">
+                                    {{ $item->preco * $item->quantidade }}
+                                </td>
+
+                            </tr>
+                        @empty
                             <tr>
-                                <td colspan="6">Nenhum produto adicionado</td>
+                                <td colspan="7">Nenhum produto adicionado</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -132,7 +147,12 @@
                 <p class="mb-1">
                     <strong>Desconto Total:</strong>
                     <span class="text-danger">
-                        R$ {{ number_format($descontoTotal, 2, ',', '.') }}
+                        <td>
+                            <input type="number" step="0.01" class="form-control desconto" value="0">
+                            <input class="preco">
+                            <input class="qtd">
+                        <td class="subtotal"></td>
+                        </td>
                     </span>
                 </p>
 
@@ -174,13 +194,19 @@
                         <br>
 
                         <label>Preço</label>
-                        <input type="text" name="preco" id="precoProduto" class="form-control">
+                        <td>
+                            <label>Preço</label>
+                            <input type="number" name="preco" id="precoProduto" class="form-control">
 
-                        <br>
+                            <br>
 
-                        <label>Quantidade</label>
-                        <input type="number" name="quantidade" class="form-control" value="1">
+                            <label>Quantidade</label>
+                            <input type="number" name="quantidade" class="form-control" value="1">
+                        </td>
 
+                        <td class="subtotal">
+                            0
+                        </td>
                     </div>
 
                     <div class="modal-footer">
@@ -224,8 +250,9 @@
 
                         <br>
 
+
                         <label>Preço</label>
-                        <input type="text" name="preco" id="precoServico" class="form-control">
+                        <input type="number" name="preco" id="precoProduto" class="form-control">
 
                         <br>
 
@@ -245,17 +272,48 @@
             </div>
         </div>
     </div>
+    <h3>Total: R$ <span id="total-geral">0.00</span></h3>
 
     {{-- SCRIPT --}}
     <script>
-        document.getElementById('produtoSelect')?.addEventListener('change', function() {
-            let preco = this.options[this.selectedIndex].dataset.preco;
-            document.getElementById('precoProduto').value = preco || '';
+        function calcularTotal() {
+            let total = 0;
+
+            document.querySelectorAll('tbody tr').forEach(function(row) {
+
+                let preco = parseFloat(row.querySelector('.preco')?.value) || 0;
+                let qtd = parseFloat(row.querySelector('.qtd')?.value) || 0;
+                let desconto = parseFloat(row.querySelector('.desconto')?.value) || 0;
+
+                let subtotal = preco * qtd;
+                let totalItem = subtotal - desconto;
+
+                if (row.querySelector('.subtotal')) {
+                    row.querySelector('.subtotal').innerText = subtotal.toFixed(2);
+                }
+
+                if (row.querySelector('.total-item')) {
+                    row.querySelector('.total-item').innerText = totalItem.toFixed(2);
+                }
+
+                total += totalItem;
+            });
+
+            document.getElementById('total-geral').innerText = total.toFixed(2);
+        }
+
+        // recalcula ao digitar
+        document.addEventListener('input', function(e) {
+            if (
+                e.target.classList.contains('qtd') ||
+                e.target.classList.contains('desconto') ||
+                e.target.classList.contains('preco')
+            ) {
+                calcularTotal();
+            }
         });
 
-        document.getElementById('servicoSelect')?.addEventListener('change', function() {
-            let preco = this.options[this.selectedIndex].dataset.preco;
-            document.getElementById('precoServico').value = preco || '';
-        });
+        // calcula ao carregar
+        window.onload = calcularTotal;
     </script>
 @endsection

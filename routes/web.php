@@ -9,6 +9,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ContatoController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ItemVendaController;
 
 
 
@@ -55,6 +56,8 @@ Route::get('/vendas', [VendaController::class, 'index'])->name('vendas.index');
 
 Route::delete('/vendas/item/{id}', [VendaController::class, 'removeItem'])
     ->name('vendas.removeItem');
+
+Route::delete('/itens/{id}', [ItemVendaController::class, 'destroy'])->name('itens.destroy');
 
 Route::put('/vendas/item/{id}', [VendaController::class, 'updateItem'])
     ->name('vendas.updateItem');

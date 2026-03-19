@@ -6,10 +6,10 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-public function up()
+    public function up()
     {
         Schema::table('vendas', function (Blueprint $table) {
-            $table->decimal('desconto_total', 10, 2)->default(0)->after('total');
+            $table->decimal('desconto_total', 10, 2)->default(0);
         });
     }
 
