@@ -9,6 +9,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ContatoController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\UserController;
+use App\http\Controllers\QuemSomosController;
 
 
 
@@ -58,3 +59,5 @@ Route::delete('/vendas/item/{id}', [VendaController::class, 'removeItem'])
 
 Route::put('/vendas/item/{id}', [VendaController::class, 'updateItem'])
     ->name('vendas.updateItem');
+
+Route::get('/quem-somos', [QuemSomosController::class, 'index']);
