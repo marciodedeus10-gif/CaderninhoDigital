@@ -10,6 +10,7 @@ use App\Http\Controllers\ContatoController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\UserController;
 use App\http\Controllers\QuemSomosController;
+use App\Http\Controllers\ItemVendaController;
 
 
 
@@ -51,6 +52,13 @@ Route::resource('vendas', VendaController::class);
 Route::post('vendas/{venda}/item', [VendaController::class,'addItem'])->name('vendas.addItem');
 Route::post('vendas/{venda}/addServico', [VendaController::class,'addServico'])->name('vendas.addServico');
 Route::post('vendas/{venda}/status', [VendaController::class,'status'])->name('vendas.status');
+Route::post('/vendas/{id}/desconto', [VendaController::class, 'updateDesconto'])
+    ->name('vendas.updateDesconto');
+Route::put('/vendas/{id}/finalizar', [VendaController::class, 'finalizar'])
+    ->name('vendas.finalizar');
+Route::delete('/itens/{id}', [ItemVendaController::class, 'destroy'])
+    ->name('itens.delete');
+
 
 Route::get('/vendas', [VendaController::class, 'index'])->name('vendas.index');
 

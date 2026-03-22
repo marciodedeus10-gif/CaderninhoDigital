@@ -20,7 +20,6 @@ class VendaController extends Controller
     public function create()
     {
         $clientes = Cliente::all();
-
         return view('vendas.create', compact('clientes'));
     }
 
@@ -46,21 +45,19 @@ class VendaController extends Controller
     public function show($id)
     {
         $venda = Venda::with('itens', 'itens.produto', 'itens.servico')->findOrFail($id);
-
-        $descontoTotal = $venda->itens->sum('desconto');
-        $total = $venda->itens->sum('subtotal');
-
+        // TOTAL BRUTO (sem desconto geral)
+        $total = $venda->itens->sum(function ($item) {
+            return ($item->preco * $item->quantidade) - $item->desconto;
+        });
         $produtos = Produto::all();
         $servicos = Servico::all();
-
-        return view('vendas.show', compact('venda', 'descontoTotal', 'total', 'produtos', 'servicos'));
+        return view('vendas.show', compact('venda', 'total', 'produtos', 'servicos'));
     }
 
     public function addItem(Request $request, Venda $venda)
     {
         $subtotal = $request->quantidade * $request->preco;
         $subtotalComDesconto = $subtotal - $request->desconto;
-
         ItemVenda::create([
             'venda_id' => $venda->id,
             'produto_id' => $request->produto_id,
@@ -74,7 +71,6 @@ class VendaController extends Controller
         $venda->total += $subtotalComDesconto;
         $venda->desconto_total += $request->desconto;
         $venda->save();
-
         return redirect()->route('vendas.show', $venda->id)->with('success', 'Item adicionado com sucesso!');
     }
 
@@ -82,7 +78,6 @@ class VendaController extends Controller
     {
         $subtotal = $request->quantidade * $request->preco;
         $subtotalComDesconto = $subtotal - $request->desconto;
-
         ItemVenda::create([
             'venda_id' => $venda->id,
             'produto_id' => null,
@@ -96,7 +91,6 @@ class VendaController extends Controller
         $venda->total += $subtotalComDesconto;
         $venda->desconto_total += $request->desconto;
         $venda->save();
-
         return redirect()->route('vendas.show', $venda->id)->with('success', 'Serviço adicionado com sucesso!');
     }
 
@@ -104,9 +98,7 @@ class VendaController extends Controller
     {
         $item = ItemVenda::findOrFail($id);
         $vendaId = $item->venda_id;
-
         $item->delete();
-
         return redirect()->route('vendas.show', $vendaId)
             ->with('success', 'Item removido!');
     }
@@ -114,14 +106,35 @@ class VendaController extends Controller
     public function updateItem(Request $request, $id)
     {
         $item = ItemVenda::findOrFail($id);
-
         $request->validate([
             'quantidade' => 'required|integer|min:1'
         ]);
-
         $item->quantidade = $request->quantidade;
         $item->save();
-
         return back()->with('success', 'Quantidade atualizada!');
+    }
+
+        public function updateDesconto(Request $request, $id)
+    {
+        $venda = Venda::findOrFail($id);
+        $venda->desconto_total = $request->desconto_total;
+        $venda->save();
+        return redirect()->back()->with('success', 'Desconto atualizado com sucesso!');
+    }
+
+        public function aplicarDesconto(Request $request, $id)
+    {
+        $venda = Venda::findOrFail($id);
+        $venda->desconto = $request->desconto;
+        $venda->save();
+        return response()->json(['success' => true]);
+    }
+
+        public function finalizar($id)
+    {
+        $venda = Venda::findOrFail($id);
+        $venda->status = 'finalizada'; // ou 1
+        $venda->save();
+        return redirect()->back()->with('success', 'Venda finalizada com sucesso!');
     }
 }

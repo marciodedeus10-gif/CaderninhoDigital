@@ -9,14 +9,16 @@ return new class extends Migration
 public function up()
     {
         Schema::table('vendas', function (Blueprint $table) {
-            $table->decimal('desconto_total', 10, 2)->default(0)->after('total');
+            $table->decimal('desconto', 10, 2)->default(0);
+            $table->string('status')->default('aberta'); // 👈 ADICIONA AQUI
         });
     }
 
     public function down()
     {
         Schema::table('vendas', function (Blueprint $table) {
-            $table->dropColumn('desconto_total');
+            $table->dropColumn('desconto');
+            $table->dropColumn('status'); // 👈 REMOVE CORRETAMENTE
         });
     }
 };

@@ -6,6 +6,7 @@
         {{-- HEADER --}}
         <div class="card shadow mb-4">
             <div class="card-body d-flex justify-content-between align-items-center">
+
                 <div>
                     <h4 class="mb-0">Venda #{{ $venda->id }}</h4>
                     <small class="text-muted">
@@ -13,9 +14,25 @@
                     </small>
                 </div>
 
-                <span class="badge bg-success">
-                    {{ ucfirst($venda->status) }}
-                </span>
+                <div class="d-flex align-items-center gap-2">
+
+                    <span class="badge bg-success">
+                        {{ ucfirst($venda->status) }}
+                    </span>
+
+                    @if ($venda->status == 'aberta')
+                        <form action="{{ route('vendas.finalizar', $venda->id) }}" method="POST">
+                            @csrf
+                            @method('PUT')
+
+                            <button class="btn btn-success btn-sm">
+                                ✔ Finalizar
+                            </button>
+                        </form>
+                    @endif
+
+                </div>
+
             </div>
         </div>
 
@@ -37,8 +54,8 @@
                             <th>Preço</th>
                             <th>Qtd</th>
                             <th>Subtotal</th>
-                            <th>Desc.</th>
                             <th>Total</th>
+                            <th>Excluir</th>
                         </tr>
                     </thead>
 
@@ -49,24 +66,25 @@
                                 <td>R$ {{ number_format($item->preco, 2, ',', '.') }}</td>
                                 <td>{{ $item->quantidade }}</td>
                                 <td>
-                                    @if ($venda->status == 'aberta')
-                                        <form action="{{ route('vendas.updateItem', $item->id) }}" method="POST"
-                                            class="d-flex justify-content-center">
-                                            @csrf
-                                            @method('PUT')
-
-                                            <input type="number" name="quantidade" value="{{ $item->quantidade }}"
-                                                class="form-control form-control-sm me-2" style="width: 70px">
-
-                                            <button class="btn btn-sm btn-success">
-                                                ✔
-                                            </button>
-                                        </form>
-                                    @else
-                                        {{ $item->quantidade }}
-                                    @endif
+                                    R$ {{ number_format($item->preco * $item->quantidade, 2, ',', '.') }}
                                 </td>
-                            @empty
+                                ===
+                                <td class="fw-bold">
+                                    R$
+                                    {{ number_format($item->preco * $item->quantidade - ($item->desconto ?? 0), 2, ',', '.') }}
+                                </td>
+                                <td>
+                                    <form action="{{ route('vendas.removeItem', $item->id) }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+
+                                        <button class="btn btn-danger btn-sm">
+                                            🗑️
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @empty
                             <tr>
                                 <td colspan="6">Nenhum produto adicionado</td>
                             </tr>
@@ -75,6 +93,7 @@
                 </table>
             </div>
         </div>
+
 
         {{-- SERVIÇOS --}}
         <div class="card shadow mb-4">
@@ -94,10 +113,12 @@
                             <th>Preço</th>
                             <th>Qtd</th>
                             <th>Subtotal</th>
-                            <th>Desc.</th>
                             <th>Total</th>
+                            <th>Exluir</th>
                         </tr>
                     </thead>
+
+
 
                     <tbody>
                         @forelse ($venda->itens->whereNotNull('servico_id') as $item)
@@ -108,12 +129,20 @@
                                 <td>
                                     R$ {{ number_format($item->preco * $item->quantidade, 2, ',', '.') }}
                                 </td>
-                                <td class="text-danger">
-                                    - R$ {{ number_format($item->desconto, 2, ',', '.') }}
-                                </td>
+
                                 <td class="fw-bold">
                                     R$
                                     {{ number_format($item->preco * $item->quantidade - $item->desconto, 2, ',', '.') }}
+                                </td>
+                                <td>
+                                    <form action="{{ route('vendas.removeItem', $item->id) }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+
+                                        <button class="btn btn-danger btn-sm">
+                                            🗑️
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
                         @empty
@@ -129,15 +158,24 @@
         {{-- TOTAL --}}
         <div class="card shadow">
             <div class="card-body text-end">
-                <p class="mb-1">
-                    <strong>Desconto Total:</strong>
-                    <span class="text-danger">
-                        R$ {{ number_format($descontoTotal, 2, ',', '.') }}
-                    </span>
-                </p>
+                <form action="{{ route('vendas.updateDesconto', $venda->id) }}" method="POST"
+                    class="d-flex justify-content-end align-items-center gap-2 mb-2">
+
+                    @csrf
+
+                    <label class="mb-0"><strong>Desconto Total:</strong></label>
+
+                    <input type="number" step="0.01" name="desconto_total" value="{{ $venda->desconto_total ?? 0 }}"
+                        class="form-control form-control-sm" style="width: 120px;">
+
+                    <button type="submit" class="btn btn-success btn-sm">
+                        ✔
+                    </button>
+                </form>
 
                 <h3 class="text-success">
-                    Total: R$ {{ number_format($total, 2, ',', '.') }}
+                    Total: R$
+                    {{ number_format(($total ?? 0) - ($venda->desconto_total ?? 0), 2, ',', '.') }}
                 </h3>
             </div>
         </div>
@@ -248,14 +286,28 @@
 
     {{-- SCRIPT --}}
     <script>
-        document.getElementById('produtoSelect')?.addEventListener('change', function() {
-            let preco = this.options[this.selectedIndex].dataset.preco;
-            document.getElementById('precoProduto').value = preco || '';
-        });
+        document.addEventListener('DOMContentLoaded', function() {
 
-        document.getElementById('servicoSelect')?.addEventListener('change', function() {
-            let preco = this.options[this.selectedIndex].dataset.preco;
-            document.getElementById('precoServico').value = preco || '';
+            const produtoSelect = document.getElementById('produtoSelect');
+            const precoProduto = document.getElementById('precoProduto');
+
+            if (produtoSelect) {
+                produtoSelect.addEventListener('change', function() {
+                    let preco = this.options[this.selectedIndex].getAttribute('data-preco');
+                    precoProduto.value = preco ? preco : '';
+                });
+            }
+
+            const servicoSelect = document.getElementById('servicoSelect');
+            const precoServico = document.getElementById('precoServico');
+
+            if (servicoSelect) {
+                servicoSelect.addEventListener('change', function() {
+                    let preco = this.options[this.selectedIndex].getAttribute('data-preco');
+                    precoServico.value = preco ? preco : '';
+                });
+            }
+
         });
     </script>
 @endsection
