@@ -9,46 +9,43 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
     <link href="{{ asset('css/topbar.css') }}" rel="stylesheet">
     <style>
-        .menu {
-            list-style: none;
-            padding: 0;
+        body {
             margin: 0;
         }
 
-        .menu>li {
-            position: relative;
-            display: inline-block;
+        /* SIDEBAR */
+        .sidebar {
+            width: 230px;
+            min-height: 100vh;
         }
 
-        .menu a {
-            display: block;
-            padding: 10px 15px;
-            text-decoration: none;
-            background-color: #2c3e50;
-            color: white;
+        /* TOPBAR */
+        .topbar {
+            height: 70px;
+            background: linear-gradient(90deg, #0d6efd, #0b5ed7);
         }
 
-        .menu a:hover {
-            background-color: #34495e;
+        /* BUSCA */
+        .search {
+            width: 200px;
+            border-radius: 20px;
+            border: none;
+            padding: 5px 15px;
         }
 
-        /* Submenu */
-        .submenu {
-            display: none;
+        /* FOTO */
+        .user-img {
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+        }
+
+        /* NOTIFICAÇÃO */
+        .notification-badge {
             position: absolute;
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            min-width: 150px;
-        }
-
-        .submenu li a {
-            background-color: #34495e;
-        }
-
-        /* MOSTRA AO PASSAR O MOUSE */
-        .dropdown:hover .submenu {
-            display: block;
+            top: -5px;
+            right: -10px;
+            font-size: 10px;
         }
     </style>
 
@@ -67,67 +64,95 @@
     </head>
 
     <body>
+        {{-- CONTEÚDO --}}
+        <div class="content w-100">
 
-        <div class="container-fluid">
-            <div class="row">
+            {{-- TOPBAR AZUL --}}
+            <div class="topbar d-flex justify-content-between align-items-center px-4">
 
-                <!-- MENU LATERAL -->
-                <div class="col-md-2 bg-dark text-white min-vh-100 p-3">
+                {{-- ESQUERDA --}}
+                <h5 class="text-white mb-0">Dashboard</h5>
 
-                    <h4 class="text-center">Caderninho Digital</h4>
-                    <hr>
+                {{-- DIREITA --}}
+                <div class="d-flex align-items-center gap-3">
 
-                    <ul class="nav flex-column">
+                    {{-- BUSCA --}}
+                    <input type="text" class="form-control search" placeholder="Buscar...">
 
-                        <li class="nav-item mb-2">
-                            <a href="/dashboard" class="nav-link text-white">
-                                🏠 Dashboard
-                            </a>
-                        </li>
+                    {{-- NOTIFICAÇÃO --}}
+                    <i class="bi bi-bell text-white fs-5 position-relative">
+                        <span class="badge bg-danger notification-badge">3</span>
+                    </i>
 
-                        <li class="nav-item mb-2">
-                            <a href="{{ route('contatos.index') }}" class="nav-link text-white">
-                                📩 Contatos
-                            </a>
-                        </li>
+                    {{-- CONFIG --}}
+                    <i class="bi bi-gear text-white fs-5"></i>
 
-                        <li class="nav-item mb-2">
-                            <a href="{{ route('clientes.index') }}" class="nav-link text-white">
-                                👥 Clientes
-                            </a>
-                        </li>
-
-                        <li class="nav-item mb-2">
-                            <a href="/vendas" class="nav-link text-white">
-                                💰 Vendas
-                            </a>
-                        </li>
-
-                        <li class="nav-item mb-2">
-                            <a href="/produtos" class="nav-link text-white">
-                                📦 Produtos
-                            </a>
-                        </li>
-
-                        <li class="nav-item mb-2">
-                            <a href="/servicos" class="nav-link text-white">
-                                🛠 Serviços
-                            </a>
-                        </li>
-
-                    </ul>
+                    {{-- FOTO --}}
+                    <img src="https://i.pravatar.cc/40" class="rounded-circle user-img">
 
                 </div>
-
-                <!-- CONTEÚDO -->
-                <div class="col-md-10 p-4">
-
-                    @yield('content')
-
-                </div>
-
             </div>
-        </div>
+
+            <div class="container-fluid">
+                <div class="row">
+
+                    <!-- MENU LATERAL -->
+                    <div class="col-md-2 text-white min-vh-100 p-3" style="background-color: #1E3A8A;">
+
+                        <h4 class="text-center">Caderninho Digital</h4>
+                        <hr>
+
+                        <ul class="nav flex-column">
+
+                            <li class="nav-item mb-2">
+                                <a href="/dashboard" class="nav-link text-white">
+                                    🏠 Dashboard
+                                </a>
+                            </li>
+
+                            <li class="nav-item mb-2">
+                                <a href="{{ route('contatos.index') }}" class="nav-link text-white">
+                                    📩 Contatos
+                                </a>
+                            </li>
+
+                            <li class="nav-item mb-2">
+                                <a href="{{ route('clientes.index') }}" class="nav-link text-white">
+                                    👥 Clientes
+                                </a>
+                            </li>
+
+                            <li class="nav-item mb-2">
+                                <a href="/vendas" class="nav-link text-white">
+                                    💰 Vendas
+                                </a>
+                            </li>
+
+                            <li class="nav-item mb-2">
+                                <a href="/produtos" class="nav-link text-white">
+                                    📦 Produtos
+                                </a>
+                            </li>
+
+                            <li class="nav-item mb-2">
+                                <a href="/servicos" class="nav-link text-white">
+                                    🛠 Serviços
+                                </a>
+                            </li>
+
+                        </ul>
+
+                    </div>
+
+                    <!-- CONTEÚDO -->
+                    <div class="col-md-10 p-4">
+
+                        @yield('content')
+
+                    </div>
+
+                </div>
+            </div>
 
     </body>
 
