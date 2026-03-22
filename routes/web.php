@@ -43,8 +43,8 @@ Route::get('/dashboard', function () {
 })->name('dashboard');
 
 
-Route::get('/perfil', [UserController::class, 'show'])->name('perfil.show');
-Route::get('/perfil/edit', [UserController::class, 'edit'])->name('perfil.edit');
+Route::get('/perfil', [UserController::class, 'edit'])->name('perfil.edit');
+Route::put('/perfil', [UserController::class, 'update'])->name('perfil.update');
 Route::put('/perfil/update', [UserController::class, 'update'])->name('perfil.update');
 Route::delete('/perfil/delete', [UserController::class, 'destroy'])->name('perfil.delete');
 

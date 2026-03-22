@@ -85,8 +85,9 @@
                     </i>
 
                     {{-- CONFIG --}}
-                    <i class="bi bi-gear text-white fs-5"></i>
-
+                    <a href="{{ route('perfil.edit') }}">
+                        <i class="bi bi-gear text-white"></i>
+                    </a>
                     {{-- FOTO --}}
                     <img src="https://i.pravatar.cc/40" class="rounded-circle user-img">
 

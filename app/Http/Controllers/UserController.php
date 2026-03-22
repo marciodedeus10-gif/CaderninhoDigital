@@ -23,33 +23,33 @@ class UserController extends Controller
             'totalVendas'
         ));
     }
-
+// Mostrar tela
     public function edit()
     {
         $user = Auth::user();
         return view('perfil.edit', compact('user'));
     }
 
+    // Atualizar dados
     public function update(Request $request)
     {
         $user = Auth::user();
 
-        $user->update([
-            'name' => $request->name,
-            'email' => $request->email
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email',
+            'password' => 'nullable|min:6'
         ]);
 
-        return redirect()->route('perfil.show')
-        ->with('success','Cadastro atualizado');
+        $user->name = $request->name;
+        $user->email = $request->email;
+
+        if ($request->password) {
+            $user->password = bcrypt($request->password);
+        }
+
+        $user->save();
+
+        return redirect()->route('perfil.edit')->with('success', 'Dados atualizados!');
     }
-
-    public function destroy()
-    {
-        $user = Auth::user();
-        Auth::logout();
-        $user->delete();
-
-        return redirect('/');
-    }
-
 }
