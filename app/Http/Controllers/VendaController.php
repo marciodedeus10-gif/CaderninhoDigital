@@ -8,6 +8,8 @@ use App\Models\Produto;
 use App\Models\Cliente;
 use App\Models\Servico;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
 
 class VendaController extends Controller
 {
@@ -137,4 +139,41 @@ class VendaController extends Controller
         $venda->save();
         return redirect()->back()->with('success', 'Venda finalizada com sucesso!');
     }
+
+    // Mostrar tela de edição
+    public function edit()
+    {
+        $user = Auth::user();
+        return view('perfil.edit', compact('user'));
+    }
+
+    // Atualizar dados
+    public function update(Request $request)
+    {
+        $user = Auth::user();
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email',
+            'telefone' => 'nullable',
+            'tipo' => 'required',
+            'foto' => 'nullable|image',
+            'tema' => 'required'
+        ]);
+
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->telefone = $request->telefone;
+        $user->tipo = $request->tipo;
+        $user->tema = $request->tema;
+        if ($request->hasFile('foto')) {
+            $path = $request->file('foto')->store('usuarios', 'public');
+            $user->foto = $path;
+        }
+        if ($request->password) {
+            $user->password = bcrypt($request->password);
+        }
+        $user->save();
+        return back()->with('success', 'Atualizado com sucesso!');
+    }
 }
+

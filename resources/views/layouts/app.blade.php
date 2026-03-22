@@ -31,6 +31,7 @@
             border-radius: 20px;
             border: none;
             padding: 5px 15px;
+
         }
 
         /* FOTO */
@@ -46,6 +47,11 @@
             top: -5px;
             right: -10px;
             font-size: 10px;
+        }
+
+        body.bg-dark {
+            background-color: #121212 !important;
+            color: #fff;
         }
     </style>
 
@@ -64,6 +70,7 @@
     </head>
 
     <body>
+    <body class="{{ auth()->check() && auth()->user()->tema == 'escuro' ? 'bg-dark text-white' : '' }}">
         {{-- CONTEÚDO --}}
         <div class="content w-100">
 
