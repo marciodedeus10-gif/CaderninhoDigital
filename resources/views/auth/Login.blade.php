@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Login - Caderninho Digital</title>
 
@@ -20,7 +21,7 @@
             padding: 40px;
             border-radius: 15px;
             width: 350px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
         }
 
         .form-control {
@@ -40,36 +41,48 @@
 
 <body>
 
-<div class="d-flex justify-content-center align-items-center vh-100">
-    
-    <div class="login-box">
+    <div class="d-flex justify-content-center align-items-center vh-100">
 
-        <h3 class="text-center logo mb-4">Caderninho Digital</h3>
+        <div class="login-box">
 
-        <form>
-            <div class="mb-3">
-                <label><i class="bi bi-envelope"></i> Email</label>
-                <input type="email" class="form-control" placeholder="Digite seu email">
+            <h3 class="text-center logo mb-4">Caderninho Digital</h3>
+
+            <form>
+                <div class="mb-3">
+                    <label><i class="bi bi-envelope"></i> Email</label>
+                    <input type="email" class="form-control" placeholder="Digite seu email">
+                </div>
+
+                <div class="mb-3">
+                    <label><i class="bi bi-lock"></i> Senha</label>
+                    <input type="password" class="form-control" placeholder="Digite sua senha">
+                </div>
+
+                <div class="d-flex justify-content-between mb-3">
+                    <div>
+                        <input type="checkbox"> Lembrar-me
+                    </div>
+                    <div>
+                        <a href="{{ route('password.request') }}">
+                            Esqueci minha senha
+                        </a>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary w-100 mb-3">Entrar</button>
+            </form>
+
+            <div class="text-center">
+                <small>Não tem conta?</small><br>
+                <a href="/register" class="btn btn-outline-primary mt-2 w-100">
+                    Criar Conta
+                </a>
             </div>
 
-            <div class="mb-3">
-                <label><i class="bi bi-lock"></i> Senha</label>
-                <input type="password" class="form-control" placeholder="Digite sua senha">
-            </div>
-
-            <button class="btn btn-primary w-100 mb-3">Entrar</button>
-        </form>
-
-        <div class="text-center">
-            <small>Não tem conta?</small><br>
-            <a href="/register" class="btn btn-outline-primary mt-2 w-100">
-                Criar Conta
-            </a>
         </div>
 
     </div>
 
-</div>
-
 </body>
+
 </html>
