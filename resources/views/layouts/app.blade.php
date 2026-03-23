@@ -119,6 +119,12 @@
                             </li>
 
                             <li class="nav-item mb-2">
+                                <a href="{{ route('quem_somos.index') }}" class="nav-link text-white">
+                                    Quem Somos
+                                </a>
+                            </li>
+
+                            <li class="nav-item mb-2">
                                 <a href="{{ route('contatos.index') }}" class="nav-link text-white">
                                     📩 Contatos
                                 </a>
