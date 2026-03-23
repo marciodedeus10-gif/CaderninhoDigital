@@ -44,8 +44,9 @@
     <div class="d-flex justify-content-center align-items-center vh-100">
 
         <div class="login-box">
+        <h3 class="text-center logo mb-4">Caderninho Digital</h3>
 
-            <h2>Recuperar Senha</h2>
+            <h3>Recuperar Senha</h3>
 
             <form method="POST" action="">
                 @csrf
