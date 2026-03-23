@@ -70,3 +70,5 @@ Route::put('/vendas/item/{id}', [VendaController::class, 'updateItem'])
 
 Route::get('/quem-somos', [QuemSomosController::class, 'index'])->name('quem_somos.index');
 Route::get('/quem_somos', [QuemSomosController::class, 'index'])->name('quem_somos.index');
+
+Route::get('/forgot-password', [AuthController::class, 'forgot'])->name('password.request');
