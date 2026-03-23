@@ -1,88 +1,33 @@
-<!DOCTYPE html>
-<html>
+@extends('layouts.auth')
 
-<head>
-    <title>Login - Caderninho Digital</title>
+@section('title', 'Login')
 
-    <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+@section('content')
 
-    <!-- Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <h4 class="text-center mb-4">Login</h4>
 
-    <style>
-        body {
-            background: linear-gradient(135deg, #0d6efd, #0a58ca);
-            height: 100vh;
-        }
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            {{ $errors->first() }}
+        </div>
+    @endif
 
-        .login-box {
-            background: white;
-            padding: 40px;
-            border-radius: 15px;
-            width: 350px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-        }
+    <form method="POST" action="{{ route('login') }}">
+        @csrf
 
-        .form-control {
-            border-radius: 10px;
-        }
-
-        .btn {
-            border-radius: 10px;
-        }
-
-        .logo {
-            font-weight: bold;
-            color: #0d6efd;
-        }
-    </style>
-</head>
-
-<body>
-
-    <div class="d-flex justify-content-center align-items-center vh-100">
-
-        <div class="login-box">
-
-            <h3 class="text-center logo mb-4">Caderninho Digital</h3>
-
-            <form>
-                <div class="mb-3">
-                    <label><i class="bi bi-envelope"></i> Email</label>
-                    <input type="email" class="form-control" placeholder="Digite seu email">
-                </div>
-
-                <div class="mb-3">
-                    <label><i class="bi bi-lock"></i> Senha</label>
-                    <input type="password" class="form-control" placeholder="Digite sua senha">
-                </div>
-
-                <div class="d-flex justify-content-between mb-3">
-                    <div>
-                        <input type="checkbox"> Lembrar-me
-                    </div>
-                    <div>
-                        <a href="{{ route('password.request') }}">
-                            Esqueci minha senha
-                        </a>
-                    </div>
-                </div>
-
-                <button class="btn btn-primary w-100 mb-3">Entrar</button>
-            </form>
-
-            <div class="text-center">
-                <small>Não tem conta?</small><br>
-                <a href="/register" class="btn btn-outline-primary mt-2 w-100">
-                    Criar Conta
-                </a>
-            </div>
-
+        <div class="mb-3">
+            <input type="email" name="email" class="form-control" placeholder="Email" required>
         </div>
 
+        <div class="mb-3">
+            <input type="password" name="password" class="form-control" placeholder="Senha" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Entrar</button>
+    </form>
+
+    <div class="text-center mt-3">
+        <a href="{{ route('register') }}">Não tem conta? Cadastre-se</a>
     </div>
 
-</body>
-
-</html>
+@endsection

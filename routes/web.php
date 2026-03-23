@@ -15,6 +15,50 @@ use App\Http\Controllers\ItemVendaController;
 
 
 
+//
+// Rotas com autenticacao
+//
+Route::middleware('auth')->group(function () {
+
+    // ADMIN
+
+    Route::resource('produtos', ProdutoController::class);
+    Route::resource('servicos', ServicoController::class);
+    Route::resource('clientes', ClienteController::class);
+    Route::resource('contatos', ContatoController::class);
+
+
+    // USUÁRIO
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+
+    Route::get('/perfil', [UserController::class, 'edit'])->name('perfil.edit');
+    Route::put('/perfil', [UserController::class, 'update'])->name('perfil.update');
+    Route::put('/perfil/update', [UserController::class, 'update'])->name('perfil.update');
+    Route::delete('/perfil/delete', [UserController::class, 'destroy'])->name('perfil.delete');
+
+    Route::resource('vendas', VendaController::class);
+    Route::post('vendas/{venda}/item', [VendaController::class,'addItem'])->name('vendas.addItem');
+    Route::post('vendas/{venda}/addServico', [VendaController::class,'addServico'])->name('vendas.addServico');
+    Route::post('vendas/{venda}/status', [VendaController::class,'status'])->name('vendas.status');
+    Route::post('/vendas/{id}/desconto', [VendaController::class, 'updateDesconto'])
+        ->name('vendas.updateDesconto');
+    Route::put('/vendas/{id}/finalizar', [VendaController::class, 'finalizar'])
+        ->name('vendas.finalizar');
+    // Route::delete('/itens/{id}', [ItemVendaController::class, 'destroy'])
+    //     ->name('itens.delete');
+
+
+    Route::get('/vendas', [VendaController::class, 'index'])->name('vendas.index');
+
+    Route::delete('/vendas/item/{id}', [VendaController::class, 'removeItem'])
+        ->name('vendas.removeItem');
+
+    Route::put('/vendas/item/{id}', [VendaController::class, 'updateItem'])
+        ->name('vendas.updateItem');
+
+});
+
 Route::get('/', function () {
     return view('home');
 });
@@ -23,8 +67,6 @@ Route::get('/dashboard/produtos-mais-vendidos',
     [DashboardController::class, 'produtosMaisVendidos']
 )->name('dashboard.produtos');
 
-Route::resource('produtos', ProdutoController::class);
-Route::resource('servicos', ServicoController::class);
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
@@ -32,41 +74,11 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
 Route::post('/register', [AuthController::class, 'register']);
 
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
-Route::resource('clientes', ClienteController::class);
-Route::resource('contatos', ContatoController::class);
-
 
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');
 
-
-Route::get('/perfil', [UserController::class, 'edit'])->name('perfil.edit');
-Route::put('/perfil', [UserController::class, 'update'])->name('perfil.update');
-Route::put('/perfil/update', [UserController::class, 'update'])->name('perfil.update');
-Route::delete('/perfil/delete', [UserController::class, 'destroy'])->name('perfil.delete');
-
-Route::resource('vendas', VendaController::class);
-Route::post('vendas/{venda}/item', [VendaController::class,'addItem'])->name('vendas.addItem');
-Route::post('vendas/{venda}/addServico', [VendaController::class,'addServico'])->name('vendas.addServico');
-Route::post('vendas/{venda}/status', [VendaController::class,'status'])->name('vendas.status');
-Route::post('/vendas/{id}/desconto', [VendaController::class, 'updateDesconto'])
-    ->name('vendas.updateDesconto');
-Route::put('/vendas/{id}/finalizar', [VendaController::class, 'finalizar'])
-    ->name('vendas.finalizar');
-Route::delete('/itens/{id}', [ItemVendaController::class, 'destroy'])
-    ->name('itens.delete');
-
-
-Route::get('/vendas', [VendaController::class, 'index'])->name('vendas.index');
-
-Route::delete('/vendas/item/{id}', [VendaController::class, 'removeItem'])
-    ->name('vendas.removeItem');
-
-Route::put('/vendas/item/{id}', [VendaController::class, 'updateItem'])
-    ->name('vendas.updateItem');
 
 Route::get('/quem-somos', [QuemSomosController::class, 'index'])->name('quem_somos.index');
 Route::get('/quem_somos', [QuemSomosController::class, 'index'])->name('quem_somos.index');
