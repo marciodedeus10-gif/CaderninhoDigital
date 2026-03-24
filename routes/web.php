@@ -80,7 +80,7 @@ Route::get('/dashboard', function () {
 })->name('dashboard');
 
 
-Route::get('/quem-somos', [QuemSomosController::class, 'index'])->name('quem_somos.index');
-Route::get('/quem_somos', [QuemSomosController::class, 'index'])->name('quem_somos.index');
+Route::get('/quemSomos', [QuemSomosController::class, 'index'])->name('quemSomos.index');
+
 
 Route::get('/forgot-password', [AuthController::class, 'forgot'])->name('password.request');

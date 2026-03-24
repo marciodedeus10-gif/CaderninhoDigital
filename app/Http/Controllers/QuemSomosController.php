@@ -8,6 +8,6 @@ class QuemSomosController extends Controller
 {
     public function index()
     {
-        return view('quem-somos.index');
+        return view('quemSomos.index');
     }
 }

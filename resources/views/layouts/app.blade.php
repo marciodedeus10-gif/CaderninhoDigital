@@ -119,8 +119,8 @@
                             </li>
 
                             <li class="nav-item mb-2">
-                                <a href="{{ route('quem_somos.index') }}" class="nav-link text-white">
-                                    Quem Somos
+                                <a href="{{ route('quemSomos.index') }}" class="nav-link text-white">
+                                    📖 Quem Somos
                                 </a>
                             </li>
 
