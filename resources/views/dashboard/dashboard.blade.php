@@ -8,11 +8,11 @@
 
     <div class="row">
 
- <div class="col-md-3">
+<div class="col-md-4">
     <div class="card text-white bg-primary mb-3">
         <div class="card-body">
-            <h5>Total de Clientes</h5>
-            <h2>{{ $totalClientes }}</h2>
+            <h5 class="card-title">Total de Clientes</h5>
+            <h3>{{ $totalClientes }}</h3>
         </div>
     </div>
 </div>

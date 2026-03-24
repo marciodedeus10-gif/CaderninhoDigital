@@ -75,12 +75,8 @@ Route::get('/register', [AuthController::class, 'showRegister'])->name('register
 Route::post('/register', [AuthController::class, 'register']);
 
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->name('dashboard');
-
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 Route::get('/quemSomos', [QuemSomosController::class, 'index'])->name('quemSomos.index');
-
 
 Route::get('/forgot-password', [AuthController::class, 'forgot'])->name('password.request');
