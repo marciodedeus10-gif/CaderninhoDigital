@@ -68,7 +68,7 @@
                                 <td>
                                     R$ {{ number_format($item->preco * $item->quantidade, 2, ',', '.') }}
                                 </td>
-                                ===
+                                
                                 <td class="fw-bold">
                                     R$
                                     {{ number_format($item->preco * $item->quantidade - ($item->desconto ?? 0), 2, ',', '.') }}
@@ -165,7 +165,7 @@
 
                     <label class="mb-0"><strong>Desconto Total:</strong></label>
 
-                    <input type="number" step="0.01" name="desconto_total" value="{{ $venda->desconto_total ?? 0 }}"
+                    <input type="number" step="0.01" name="desconto" value="{{ $venda->desconto ?? 0 }}"
                         class="form-control form-control-sm" style="width: 120px;">
 
                     <button type="submit" class="btn btn-success btn-sm">
@@ -175,7 +175,7 @@
 
                 <h3 class="text-success">
                     Total: R$
-                    {{ number_format(($total ?? 0) - ($venda->desconto_total ?? 0), 2, ',', '.') }}
+                    {{ $total}}
                 </h3>
             </div>
         </div>

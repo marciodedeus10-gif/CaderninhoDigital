@@ -48,9 +48,8 @@ class VendaController extends Controller
     {
         $venda = Venda::with('itens', 'itens.produto', 'itens.servico')->findOrFail($id);
         // TOTAL BRUTO (sem desconto geral)
-        $total = $venda->itens->sum(function ($item) {
-            return ($item->preco * $item->quantidade) - $item->desconto;
-        });
+        $totalItens = $venda->itens->sum('subtotal');
+        $total = $totalItens - $venda->desconto;
         $produtos = Produto::all();
         $servicos = Servico::all();
         return view('vendas.show', compact('venda', 'total', 'produtos', 'servicos'));
@@ -59,39 +58,37 @@ class VendaController extends Controller
     public function addItem(Request $request, Venda $venda)
     {
         $subtotal = $request->quantidade * $request->preco;
-        $subtotalComDesconto = $subtotal - $request->desconto;
-        ItemVenda::create([
-            'venda_id' => $venda->id,
-            'produto_id' => $request->produto_id,
-            'servico_id' => null,
-            'quantidade' => $request->quantidade,
-            'preco' => $request->preco,
-            'desconto' => $request->desconto,
-            'subtotal' => $subtotalComDesconto
+        
+ItemVenda::create([
+    'venda_id' => $venda->id,
+    'produto_id' => $request->produto_id,
+    'servico_id' => null,
+    'quantidade' => $request->quantidade,
+    'preco' => $request->preco,
+    'subtotal' => $subtotal
         ]);
 
-        $venda->total += $subtotalComDesconto;
-        $venda->desconto_total += $request->desconto;
-        $venda->save();
+$totalItens = $venda->itens()->sum('subtotal');
+$venda->total = $totalItens - $venda->desconto;
+$venda->save();
         return redirect()->route('vendas.show', $venda->id)->with('success', 'Item adicionado com sucesso!');
     }
 
     public function addServico(Request $request, Venda $venda)
     {
         $subtotal = $request->quantidade * $request->preco;
-        $subtotalComDesconto = $subtotal - $request->desconto;
-        ItemVenda::create([
-            'venda_id' => $venda->id,
-            'produto_id' => null,
-            'servico_id' => $request->servico_id,
-            'quantidade' => $request->quantidade,
-            'preco' => $request->preco,
-            'desconto' => $request->desconto,
-            'subtotal' => $subtotalComDesconto
+
+ItemVenda::create([
+    'venda_id' => $venda->id,
+    'produto_id' => null,
+    'servico_id' => $request->servico_id,
+    'quantidade' => $request->quantidade,
+    'preco' => $request->preco,
+    'subtotal' => $subtotal
         ]);
 
-        $venda->total += $subtotalComDesconto;
-        $venda->desconto_total += $request->desconto;
+        $totalItens = $venda->itens()->sum('subtotal');
+        $venda->total = $totalItens - $venda->desconto;
         $venda->save();
         return redirect()->route('vendas.show', $venda->id)->with('success', 'Serviço adicionado com sucesso!');
     }
@@ -107,32 +104,30 @@ class VendaController extends Controller
 
     public function updateItem(Request $request, $id)
     {
-        $item = ItemVenda::findOrFail($id);
-        $request->validate([
-            'quantidade' => 'required|integer|min:1'
-        ]);
-        $item->quantidade = $request->quantidade;
-        $item->save();
+$item->quantidade = $request->quantidade;
+$item->subtotal = $item->quantidade * $item->preco;
+$item->save();
+
+$venda = $item->venda;
+$totalItens = $venda->itens()->sum('subtotal');
+$venda->total = $totalItens - $venda->desconto;
+$venda->save();
         return back()->with('success', 'Quantidade atualizada!');
     }
 
-        public function updateDesconto(Request $request, $id)
+    public function updateDesconto(Request $request, $id)
     {
         $venda = Venda::findOrFail($id);
-        $venda->desconto_total = $request->desconto_total;
-        $venda->save();
+$venda->desconto = $request->desconto ?? 0;
+
+$totalItens = $venda->itens()->sum('subtotal');
+$venda->total = $totalItens - $venda->desconto;
+
+$venda->save();
         return redirect()->back()->with('success', 'Desconto atualizado com sucesso!');
     }
 
-        public function aplicarDesconto(Request $request, $id)
-    {
-        $venda = Venda::findOrFail($id);
-        $venda->desconto = $request->desconto;
-        $venda->save();
-        return response()->json(['success' => true]);
-    }
-
-        public function finalizar($id)
+    public function finalizar($id)
     {
         $venda = Venda::findOrFail($id);
         $venda->status = 'finalizada'; // ou 1

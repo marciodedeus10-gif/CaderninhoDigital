@@ -1,53 +1,49 @@
 @extends('layouts.app')
 
 @section('content')
+    <div class="container">
 
-<div class="container">
+        <h2>Vendas</h2>
 
-<h2>Vendas</h2>
+        <a href="{{ route('vendas.create') }}" class="btn btn-primary">
+            Nova Venda
+        </a>
 
-<a href="{{ route('vendas.create') }}" class="btn btn-primary">
-Nova Venda
-</a>
+        <br><br>
 
-<br><br>
+        <table class="table">
 
-<table class="table">
+            <tr>
+                <th>ID</th>
+                <th>Cliente</th>
+                <th>Status</th>
+                <th>Total</th>
+                <th>Ações</th>
+            </tr>
 
-<tr>
-<th>ID</th>
-<th>Cliente</th>
-<th>Status</th>
-<th>Total</th>
-<th>Ações</th>
-</tr>
+            @foreach ($vendas as $venda)
+                <tr>
 
-@foreach($vendas as $venda)
+                    <td>{{ $venda->id }}</td>
 
-<tr>
+                    <td>{{ $venda->cliente->nome ?? '' }}</td>
 
-<td>{{ $venda->id }}</td>
+                    <td>{{ $venda->status }}</td>
 
-<td>{{ $venda->cliente->nome ?? '' }}</td>
+                    <td>R$ {{ $venda->total }}</td>
 
-<td>{{ $venda->status }}</td>
+                    <td>
 
-<td>R$ {{ $venda->total }}</td>
+                        <a href="{{ route('vendas.show', $venda->id) }}" class="btn btn-info">
+                            Abrir
+                        </a>
 
-<td>
+                    </td>
 
-<a href="{{ route('vendas.show',$venda->id) }}" class="btn btn-info">
-Abrir
-</a>
+                </tr>
+            @endforeach
 
-</td>
+        </table>
 
-</tr>
-
-@endforeach
-
-</table>
-
-</div>
-
+    </div>
 @endsection
