@@ -41,7 +41,8 @@ class VendaController extends Controller
             'status' => 'aberta',
         ]);
 
-        return redirect()->route('vendas.show', $venda->id)->with('success', 'Venda criada com sucesso!');
+        return redirect()->route('dashboard')
+            ->with('success', 'Venda criada com sucesso!');
     }
 
     public function show($id)
