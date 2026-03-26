@@ -58,7 +58,7 @@ class VendaController extends Controller
     public function addItem(Request $request, Venda $venda)
     {
         $subtotal = $request->quantidade * $request->preco;
-        
+
 ItemVenda::create([
     'venda_id' => $venda->id,
     'produto_id' => $request->produto_id,
