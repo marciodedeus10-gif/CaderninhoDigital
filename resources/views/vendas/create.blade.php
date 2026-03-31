@@ -47,8 +47,8 @@
                     <div class="col-md-4 mb-3">
                         <label class="form-label">Data da Venda</label>
                         <input type="date" name="data_venda"
-                               class="form-control @error('data_venda') is-invalid @enderror"
-                               value="{{ old('data_venda', date('Y-m-d')) }}">
+                                class="form-control @error('data_venda') is-invalid @enderror"
+                                value="{{ old('data_venda', date('Y-m-d')) }}">
 
                         @error('data_venda')
                             <div class="invalid-feedback">{{ $message }}</div>
