@@ -27,6 +27,10 @@
     </form>
 
     <div class="text-center mt-3">
+        <a href="{{ route('password.request') }}">Esqueci minha senha</a>
+    </div>
+
+    <div class="text-center mt-3">
         <a href="{{ route('register') }}">Não tem conta? Cadastre-se</a>
     </div>
 

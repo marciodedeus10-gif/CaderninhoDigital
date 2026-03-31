@@ -11,6 +11,9 @@ use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\UserController;
 use App\http\Controllers\QuemSomosController;
 use App\Http\Controllers\ItemVendaController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\ResetPasswordController;
+
 
 
 
@@ -80,3 +83,12 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard
 Route::get('/quemSomos', [QuemSomosController::class, 'index'])->name('quemSomos.index');
 
 Route::get('/forgot-password', [AuthController::class, 'forgot'])->name('password.request');
+
+
+Route::get('/esqueci-senha', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+
+Route::post('/esqueci-senha', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+
+Route::get('/resetar-senha/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+
+Route::post('/resetar-senha', [ResetPasswordController::class, 'reset'])->name('password.update');
