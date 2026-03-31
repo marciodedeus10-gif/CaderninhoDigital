@@ -104,26 +104,26 @@ ItemVenda::create([
 
     public function updateItem(Request $request, $id)
     {
-$item->quantidade = $request->quantidade;
-$item->subtotal = $item->quantidade * $item->preco;
-$item->save();
+    $item->quantidade = $request->quantidade;
+    $item->subtotal = $item->quantidade * $item->preco;
+    $item->save();
 
-$venda = $item->venda;
-$totalItens = $venda->itens()->sum('subtotal');
-$venda->total = $totalItens - $venda->desconto;
-$venda->save();
+    $venda = $item->venda;
+    $totalItens = $venda->itens()->sum('subtotal');
+    $venda->total = $totalItens - $venda->desconto;
+    $venda->save();
         return back()->with('success', 'Quantidade atualizada!');
     }
 
     public function updateDesconto(Request $request, $id)
     {
         $venda = Venda::findOrFail($id);
-$venda->desconto = $request->desconto ?? 0;
+    $venda->desconto = $request->desconto ?? 0;
 
-$totalItens = $venda->itens()->sum('subtotal');
-$venda->total = $totalItens - $venda->desconto;
+    $totalItens = $venda->itens()->sum('subtotal');
+    $venda->total = $totalItens - $venda->desconto;
 
-$venda->save();
+    $venda->save();
         return redirect()->back()->with('success', 'Desconto atualizado com sucesso!');
     }
 
