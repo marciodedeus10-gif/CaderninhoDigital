@@ -175,7 +175,7 @@
 
                 <h3 class="text-success">
                     Total: R$
-                    {{ $total}}
+                    {{ $total }}
                 </h3>
             </div>
         </div>
@@ -203,7 +203,7 @@
                             <option value="">Selecione</option>
 
                             @foreach ($produtos as $produto)
-                                <option value="{{ $produto->id }}" data-preco="{{ $produto->preco_venda }}">
+                                <option value="{{ $produto->id }}" data-preco="{{ $produto->preco }}">
                                     {{ $produto->nome }}
                                 </option>
                             @endforeach
