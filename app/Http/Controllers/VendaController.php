@@ -41,7 +41,7 @@ class VendaController extends Controller
             'status' => 'aberta',
         ]);
 
-        return redirect()->route('dashboard')
+        return redirect()->route('vendas.show', $venda->id)
             ->with('success', 'Venda criada com sucesso!');
     }
 
@@ -60,18 +60,18 @@ class VendaController extends Controller
     {
         $subtotal = $request->quantidade * $request->preco;
 
-ItemVenda::create([
-    'venda_id' => $venda->id,
-    'produto_id' => $request->produto_id,
-    'servico_id' => null,
-    'quantidade' => $request->quantidade,
-    'preco' => $request->preco,
-    'subtotal' => $subtotal
+        ItemVenda::create([
+            'venda_id' => $venda->id,
+            'produto_id' => $request->produto_id,
+            'servico_id' => null,
+            'quantidade' => $request->quantidade,
+            'preco' => $request->preco,
+            'subtotal' => $subtotal
         ]);
 
-$totalItens = $venda->itens()->sum('subtotal');
-$venda->total = $totalItens - $venda->desconto;
-$venda->save();
+        $totalItens = $venda->itens()->sum('subtotal');
+        $venda->total = $totalItens - $venda->desconto;
+        $venda->save();
         return redirect()->route('vendas.show', $venda->id)->with('success', 'Item adicionado com sucesso!');
     }
 
@@ -79,13 +79,13 @@ $venda->save();
     {
         $subtotal = $request->quantidade * $request->preco;
 
-ItemVenda::create([
-    'venda_id' => $venda->id,
-    'produto_id' => null,
-    'servico_id' => $request->servico_id,
-    'quantidade' => $request->quantidade,
-    'preco' => $request->preco,
-    'subtotal' => $subtotal
+        ItemVenda::create([
+            'venda_id' => $venda->id,
+            'produto_id' => null,
+            'servico_id' => $request->servico_id,
+            'quantidade' => $request->quantidade,
+            'preco' => $request->preco,
+            'subtotal' => $subtotal
         ]);
 
         $totalItens = $venda->itens()->sum('subtotal');
@@ -103,28 +103,28 @@ ItemVenda::create([
             ->with('success', 'Item removido!');
     }
 
-    public function updateItem(Request $request, $id)
+    public function updateItem(Request $request, ItemVenda $item)
     {
-    $item->quantidade = $request->quantidade;
-    $item->subtotal = $item->quantidade * $item->preco;
-    $item->save();
+        $item->quantidade = $request->quantidade;
+        $item->subtotal = $item->quantidade * $item->preco;
+        $item->save();
 
-    $venda = $item->venda;
-    $totalItens = $venda->itens()->sum('subtotal');
-    $venda->total = $totalItens - $venda->desconto;
-    $venda->save();
+        $venda = $item->venda;
+        $totalItens = $venda->itens()->sum('subtotal');
+        $venda->total = $totalItens - $venda->desconto;
+        $venda->save();
         return back()->with('success', 'Quantidade atualizada!');
     }
 
     public function updateDesconto(Request $request, $id)
     {
         $venda = Venda::findOrFail($id);
-    $venda->desconto = $request->desconto ?? 0;
+        $venda->desconto = $request->desconto ?? 0;
 
-    $totalItens = $venda->itens()->sum('subtotal');
-    $venda->total = $totalItens - $venda->desconto;
+        $totalItens = $venda->itens()->sum('subtotal');
+        $venda->total = $totalItens - $venda->desconto;
 
-    $venda->save();
+        $venda->save();
         return redirect()->back()->with('success', 'Desconto atualizado com sucesso!');
     }
 
@@ -133,7 +133,8 @@ ItemVenda::create([
         $venda = Venda::findOrFail($id);
         $venda->status = 'finalizada'; // ou 1
         $venda->save();
-        return redirect()->back()->with('success', 'Venda finalizada com sucesso!');
+
+        return redirect()->route('vendas.show', $venda->id)->with('success', 'Venda finalizada com sucesso!');
     }
 
     // Mostrar tela de edição
@@ -172,4 +173,3 @@ ItemVenda::create([
         return back()->with('success', 'Atualizado com sucesso!');
     }
 }
-
