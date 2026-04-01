@@ -62,13 +62,13 @@
                     <tbody>
                         @forelse ($venda->itens->whereNotNull('produto_id') as $item)
                             <tr>
-                                <td>{{ $item->produto->nome }}</td>
+                                <td>{{ $item->produto->nome ?? 'Produto removido' }}</td>
                                 <td>R$ {{ number_format($item->preco, 2, ',', '.') }}</td>
                                 <td>{{ $item->quantidade }}</td>
                                 <td>
                                     R$ {{ number_format($item->preco * $item->quantidade, 2, ',', '.') }}
                                 </td>
-                                
+
                                 <td class="fw-bold">
                                     R$
                                     {{ number_format($item->preco * $item->quantidade - ($item->desconto ?? 0), 2, ',', '.') }}
@@ -123,7 +123,7 @@
                     <tbody>
                         @forelse ($venda->itens->whereNotNull('servico_id') as $item)
                             <tr>
-                                <td>{{ $item->servico->nome }}</td>
+                                <td>{{ $item->servico->nome ?? 'Serviço removido' }}</td>
                                 <td>R$ {{ number_format($item->preco, 2, ',', '.') }}</td>
                                 <td>{{ $item->quantidade }}</td>
                                 <td>

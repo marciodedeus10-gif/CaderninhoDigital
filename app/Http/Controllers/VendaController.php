@@ -58,6 +58,16 @@ class VendaController extends Controller
 
     public function addItem(Request $request, Venda $venda)
     {
+        $request->validate([
+            'produto_id' => 'required|exists:produtos,id',
+            'preco' => 'required|numeric|min:0',
+            'quantidade' => 'required|integer|min:1'
+        ]);
+
+        if ($venda->status !== 'aberta') {
+            return back()->with('error', 'Venda já finalizada!');
+        }
+
         $subtotal = $request->quantidade * $request->preco;
 
         ItemVenda::create([
@@ -69,14 +79,21 @@ class VendaController extends Controller
             'subtotal' => $subtotal
         ]);
 
-        $totalItens = $venda->itens()->sum('subtotal');
-        $venda->total = $totalItens - $venda->desconto;
-        $venda->save();
-        return redirect()->route('vendas.show', $venda->id)->with('success', 'Item adicionado com sucesso!');
+        return back()->with('success', 'Item adicionado!');
     }
 
     public function addServico(Request $request, Venda $venda)
     {
+        $request->validate([
+            'servico_id' => 'required|exists:servicos,id',
+            'preco' => 'required|numeric|min:0',
+            'quantidade' => 'required|integer|min:1'
+        ]);
+
+        if ($venda->status !== 'aberta') {
+            return back()->with('error', 'Venda já finalizada!');
+        }
+
         $subtotal = $request->quantidade * $request->preco;
 
         ItemVenda::create([
@@ -88,19 +105,20 @@ class VendaController extends Controller
             'subtotal' => $subtotal
         ]);
 
-        $totalItens = $venda->itens()->sum('subtotal');
-        $venda->total = $totalItens - $venda->desconto;
-        $venda->save();
-        return redirect()->route('vendas.show', $venda->id)->with('success', 'Serviço adicionado com sucesso!');
+        return back()->with('success', 'Serviço adicionado!');
     }
 
     public function removeItem($id)
     {
         $item = ItemVenda::findOrFail($id);
-        $vendaId = $item->venda_id;
+
+        if ($item->venda->status !== 'aberta') {
+            return back()->with('error', 'Não pode remover item!');
+        }
+
         $item->delete();
-        return redirect()->route('vendas.show', $vendaId)
-            ->with('success', 'Item removido!');
+
+        return back()->with('success', 'Item removido!');
     }
 
     public function updateItem(Request $request, ItemVenda $item)
@@ -118,23 +136,38 @@ class VendaController extends Controller
 
     public function updateDesconto(Request $request, $id)
     {
+        $request->validate([
+            'desconto' => 'required|numeric|min:0'
+        ]);
+
         $venda = Venda::findOrFail($id);
-        $venda->desconto = $request->desconto ?? 0;
+
+        if ($venda->status !== 'aberta') {
+            return back()->with('error', 'Venda finalizada!');
+        }
+
+        $venda->desconto = $request->desconto;
 
         $totalItens = $venda->itens()->sum('subtotal');
         $venda->total = $totalItens - $venda->desconto;
 
         $venda->save();
-        return redirect()->back()->with('success', 'Desconto atualizado com sucesso!');
+
+        return back()->with('success', 'Desconto atualizado!');
     }
 
     public function finalizar($id)
     {
-        $venda = Venda::findOrFail($id);
-        $venda->status = 'finalizada'; // ou 1
+        $venda = Venda::with('itens')->findOrFail($id);
+
+        if ($venda->itens->count() == 0) {
+            return back()->with('error', 'Adicione itens antes de finalizar!');
+        }
+
+        $venda->status = 'finalizada';
         $venda->save();
 
-        return redirect()->route('vendas.show', $venda->id)->with('success', 'Venda finalizada com sucesso!');
+        return back()->with('success', 'Venda finalizada!');
     }
 
     // Mostrar tela de edição
