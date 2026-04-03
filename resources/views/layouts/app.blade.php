@@ -464,7 +464,7 @@
             {{-- Avatar + Dropdown Perfil --}}
             <div style="position: relative;">
                 <button class="topbar-avatar-btn" id="profileToggle">
-                    <img src="https://i.pravatar.cc/40" class="topbar-avatar" alt="Avatar">
+                    <img src="{{ auth()->check() ? (auth()->user()->avatar ? asset('storage/' . auth()->user()->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name) . '&background=random') : 'https://i.pravatar.cc/40' }}" class="topbar-avatar" alt="Avatar">
                     <div class="topbar-user-info">
                         <span class="topbar-user-name">
                             {{ auth()->check() ? auth()->user()->name : 'Usuário' }}
@@ -479,7 +479,7 @@
                 <div class="profile-dropdown" id="profileDropdown">
 
                     <div class="profile-dropdown-header">
-                        <img src="https://i.pravatar.cc/80" alt="Avatar">
+                        <img src="{{ auth()->check() ? (auth()->user()->avatar ? asset('storage/' . auth()->user()->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name) . '&background=random') : 'https://i.pravatar.cc/80' }}" alt="Avatar">
                         <div>
                             <span class="pd-name">{{ auth()->check() ? auth()->user()->name : 'Usuário' }}</span>
                             <span class="pd-email">{{ auth()->check() ? auth()->user()->email : 'usuario@email.com' }}</span>

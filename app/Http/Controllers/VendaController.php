@@ -197,7 +197,7 @@ class VendaController extends Controller
         $user->tema = $request->tema;
         if ($request->hasFile('foto')) {
             $path = $request->file('foto')->store('usuarios', 'public');
-            $user->foto = $path;
+            $user->avatar = $path;
         }
         if ($request->password) {
             $user->password = bcrypt($request->password);

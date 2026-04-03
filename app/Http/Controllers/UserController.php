@@ -38,11 +38,21 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email',
-            'password' => 'nullable|min:6'
+            'password' => 'nullable|min:6',
+            'foto' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048'
         ]);
 
         $user->name = $request->name;
         $user->email = $request->email;
+        // Comentado para não dar erro no MySQL, já que essas colunas não existem no seu banco atual:
+        // if ($request->has('telefone')) $user->telefone = $request->telefone;
+        // if ($request->has('tipo')) $user->tipo = $request->tipo;
+        // if ($request->has('tema')) $user->tema = $request->tema;
+
+        if ($request->hasFile('foto')) {
+            $path = $request->file('foto')->store('fotos_perfil', 'public');
+            $user->avatar = $path;
+        }
 
         if ($request->password) {
             $user->password = bcrypt($request->password);

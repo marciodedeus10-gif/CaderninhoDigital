@@ -44,8 +44,8 @@
 
                     {{-- Foto --}}
                     <input type="file" name="foto" class="form-control mb-2">
-                    @if ($user->foto)
-                        <img src="{{ asset('storage/' . $user->foto) }}" width="80" class="mb-2 rounded-circle">
+                    @if ($user->avatar)
+                        <img src="{{ asset('storage/' . $user->avatar) }}" width="80" class="mb-2 rounded-circle">
                     @endif
 
                     {{-- Senha --}}
