@@ -15,7 +15,7 @@ class VendaController extends Controller
 {
     public function index()
     {
-        $vendas = Venda::with('cliente')->get();
+        $vendas = Venda::with('cliente', 'itens.produto')->get();
         return view('vendas.index', compact('vendas'));
     }
 

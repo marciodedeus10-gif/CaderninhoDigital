@@ -26,14 +26,25 @@
     </div>
 </div>
 
+@forelse($produtosMaisVendidos as $item)
 <div class="col-md-3">
     <div class="card text-white bg-warning mb-3">
         <div class="card-body">
             <h5>Produto Mais Vendido</h5>
-            <h5>{{ $produtoMaisVendido->nome ?? 'Nenhum' }}</h5>
+            <h5>{{ $item->produto->nome ?? 'Nenhum' }} ({{ $item->total }})</h5>
         </div>
     </div>
 </div>
+@empty
+<div class="col-md-3">
+    <div class="card text-white bg-warning mb-3">
+        <div class="card-body">
+            <h5>Produto Mais Vendido</h5>
+            <h5>Nenhum</h5>
+        </div>
+    </div>
+</div>
+@endforelse
 
         <div class="col-md-3">
             <div class="card text-white bg-danger mb-3">
@@ -106,9 +117,9 @@
 
                     <tr>
                         <td>{{ $venda->cliente->nome ?? '' }}</td>
-                        <td>{{ $venda->produto }}</td>
-                        <td>{{ $venda->valor }}</td>
-                        <td>{{ $venda->valor_total }}</td>
+                        <td>{{ $venda->itens->first()->produto->nome ?? 'Vários' }}</td>
+                        <td>R$ {{ number_format($venda->valor ?? 0, 2, ',', '.') }}</td>
+                        <td>R$ {{ number_format($venda->valor_total ?? 0, 2, ',', '.') }}</td>
                         <td>{{ $venda->created_at->format('d/m/Y') }}</td>
                     </tr>
 
