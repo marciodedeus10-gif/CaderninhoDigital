@@ -132,7 +132,7 @@
 
                                 <td class="fw-bold">
                                     R$
-                                    {{ number_format($item->preco * $item->quantidade - $item->desconto, 2, ',', '.') }}
+                                    {{ number_format($item->preco * $item->quantidade - ($item->desconto ?? 0), 2, ',', '.') }}
                                 </td>
                                 <td>
                                     <form action="{{ route('vendas.removeItem', $item->id) }}" method="POST">

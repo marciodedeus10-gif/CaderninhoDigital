@@ -50,7 +50,7 @@ class VendaController extends Controller
         $venda = Venda::with('itens', 'itens.produto', 'itens.servico')->findOrFail($id);
         // TOTAL BRUTO (sem desconto geral)
         $totalItens = $venda->itens->sum('subtotal');
-        $total = $totalItens - $venda->desconto;
+        $total = $totalItens - ($venda->desconto ?? 0);
         $produtos = Produto::all();
         $servicos = Servico::all();
         return view('vendas.show', compact('venda', 'total', 'produtos', 'servicos'));
@@ -58,6 +58,10 @@ class VendaController extends Controller
 
     public function addItem(Request $request, Venda $venda)
     {
+        if ($request->has('preco')) {
+            $request->merge(['preco' => str_replace(',', '.', $request->preco)]);
+        }
+
         $request->validate([
             'produto_id' => 'required|exists:produtos,id',
             'preco' => 'required|numeric|min:0',
@@ -84,6 +88,10 @@ class VendaController extends Controller
 
     public function addServico(Request $request, Venda $venda)
     {
+        if ($request->has('preco')) {
+            $request->merge(['preco' => str_replace(',', '.', $request->preco)]);
+        }
+
         $request->validate([
             'servico_id' => 'required|exists:servicos,id',
             'preco' => 'required|numeric|min:0',
@@ -129,13 +137,17 @@ class VendaController extends Controller
 
         $venda = $item->venda;
         $totalItens = $venda->itens()->sum('subtotal');
-        $venda->total = $totalItens - $venda->desconto;
+        $venda->total = $totalItens - ($venda->desconto ?? 0);
         $venda->save();
         return back()->with('success', 'Quantidade atualizada!');
     }
 
     public function updateDesconto(Request $request, $id)
     {
+        if ($request->has('desconto')) {
+            $request->merge(['desconto' => str_replace(',', '.', $request->desconto)]);
+        }
+
         $request->validate([
             'desconto' => 'required|numeric|min:0'
         ]);
