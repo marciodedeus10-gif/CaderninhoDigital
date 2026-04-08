@@ -10,6 +10,7 @@ use App\Http\Controllers\ContatoController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\QuemSomosController;
+use App\Http\Controllers\OportunidadeController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 
@@ -52,6 +53,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('servicos', ServicoController::class);
     Route::resource('clientes', ClienteController::class);
     Route::resource('contatos', ContatoController::class);
+    Route::resource('oportunidades', OportunidadeController::class);
 
     // Logout
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');

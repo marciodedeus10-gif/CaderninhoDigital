@@ -587,6 +587,14 @@
                             <span class="nav-label">Serviços</span>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a href="{{ route('oportunidades.index') }}"
+                           class="nav-link-item {{ request()->routeIs('oportunidades.*') ? 'active' : '' }}"
+                           data-tooltip="Oportunidades">
+                            <i class="bi bi-lightbulb nav-icon"></i>
+                            <span class="nav-label">Oportunidades</span>
+                        </a>
+                    </li>
                 </ul>
 
                 <div class="sidebar-divider"></div>
