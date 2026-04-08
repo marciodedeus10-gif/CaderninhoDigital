@@ -114,24 +114,20 @@
                 <tbody>
 
                     @foreach($ultimasVendas as $venda)
-
                     <tr>
-                        <td>{{ $venda->cliente->nome ?? '' }}</td>
-                        <td>{{ $venda->itens->first()->produto->nome ?? 'Vários' }}</td>
-                        <td>R$ {{ number_format($venda->valor ?? 0, 2, ',', '.') }}</td>
-                        <td>R$ {{ number_format($venda->valor_total ?? 0, 2, ',', '.') }}</td>
+                        <td>{{ $venda->cliente->nome ?? 'N/A' }}</td>
+                        <td>
+                            @if($venda->itens->count() > 1)
+                                Vários ({{ $venda->itens->count() }})
+                            @else
+                                {{ $venda->itens->first()->produto->nome ?? ($venda->itens->first()->servico->nome ?? 'N/A') }}
+                            @endif
+                        </td>
+                        <td>R$ {{ number_format($venda->subtotal, 2, ',', '.') }}</td>
+                        <td>R$ {{ number_format($venda->total, 2, ',', '.') }}</td>
                         <td>{{ $venda->created_at->format('d/m/Y') }}</td>
                     </tr>
-
                     @endforeach
-
-                    <tr>
-                        <td>Maria</td>
-                        <td>Produto X</td>
-                        <td>200</td>
-                        <td>200</td>
-                        <td>04/05/2024</td>
-                    </tr>
 
                 </tbody>
 

@@ -39,6 +39,7 @@ class VendaController extends Controller
             'data_vencimento' => $request->data_vencimento,
             'observacoes' => $request->observacoes,
             'status' => 'aberta',
+            'total' => 0,
         ]);
 
         return redirect()->route('vendas.show', $venda->id)
@@ -49,8 +50,8 @@ class VendaController extends Controller
     {
         $venda = Venda::with('itens', 'itens.produto', 'itens.servico')->findOrFail($id);
         // TOTAL BRUTO (sem desconto geral)
-        $totalItens = $venda->itens->sum('subtotal');
-        $total = $totalItens - ($venda->desconto ?? 0);
+        $totalItens = $venda->subtotal;
+        $total = $venda->total;
         $produtos = Produto::all();
         $servicos = Servico::all();
         return view('vendas.show', compact('venda', 'total', 'produtos', 'servicos'));
@@ -83,6 +84,8 @@ class VendaController extends Controller
             'subtotal' => $subtotal
         ]);
 
+        $venda->recalcularTotal();
+
         return back()->with('success', 'Item adicionado!');
     }
 
@@ -113,18 +116,22 @@ class VendaController extends Controller
             'subtotal' => $subtotal
         ]);
 
+        $venda->recalcularTotal();
+
         return back()->with('success', 'Serviço adicionado!');
     }
 
     public function removeItem($id)
     {
         $item = ItemVenda::findOrFail($id);
+        $venda = $item->venda;
 
-        if ($item->venda->status !== 'aberta') {
+        if ($venda->status !== 'aberta') {
             return back()->with('error', 'Não pode remover item!');
         }
 
         $item->delete();
+        $venda->recalcularTotal();
 
         return back()->with('success', 'Item removido!');
     }
@@ -135,10 +142,7 @@ class VendaController extends Controller
         $item->subtotal = $item->quantidade * $item->preco;
         $item->save();
 
-        $venda = $item->venda;
-        $totalItens = $venda->itens()->sum('subtotal');
-        $venda->total = $totalItens - ($venda->desconto ?? 0);
-        $venda->save();
+        $item->venda->recalcularTotal();
         return back()->with('success', 'Quantidade atualizada!');
     }
 
@@ -159,11 +163,7 @@ class VendaController extends Controller
         }
 
         $venda->desconto = $request->desconto;
-
-        $totalItens = $venda->itens()->sum('subtotal');
-        $venda->total = $totalItens - $venda->desconto;
-
-        $venda->save();
+        $venda->recalcularTotal();
 
         return back()->with('success', 'Desconto atualizado!');
     }

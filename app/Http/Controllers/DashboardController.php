@@ -35,7 +35,7 @@ class DashboardController extends Controller
     ->take(3)
     ->get();
 
-        $ultimasVendas = Venda::with('cliente')->latest()->take(5)->get();
+        $ultimasVendas = Venda::with(['cliente', 'itens.produto'])->latest()->take(5)->get();
 
         return view('dashboard.dashboard', compact(
             'totalClientes',

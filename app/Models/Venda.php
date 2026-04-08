@@ -31,4 +31,15 @@ class Venda extends Model
     {
         return $this->hasMany(ItemVenda::class);
     }
+
+    public function getSubtotalAttribute()
+    {
+        return $this->itens->sum('subtotal');
+    }
+
+    public function recalcularTotal()
+    {
+        $this->total = $this->subtotal - ($this->desconto ?? 0);
+        $this->save();
+    }
 }
