@@ -8,49 +8,42 @@
 
     <div class="row">
 
-<div class="col-md-4">
-    <div class="card text-white bg-primary mb-3">
-        <div class="card-body">
-            <h5 class="card-title">Total de Clientes</h5>
-            <h3>{{ $totalClientes }}</h3>
+        <div class="col-md-3">
+            <div class="card text-white bg-primary mb-3 shadow-sm">
+                <div class="card-body text-center">
+                    <h6 class="card-title text-uppercase opacity-75">Total de Clientes</h6>
+                    <h2 class="fw-bold">{{ $totalClientes }}</h2>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
-
-<div class="col-md-3">
-    <div class="card text-white bg-success mb-3">
-        <div class="card-body">
-            <h5>Total de Vendas</h5>
-            <h2>{{ $totalVendas }}</h2>
-        </div>
-    </div>
-</div>
-
-@forelse($produtosMaisVendidos as $item)
-<div class="col-md-3">
-    <div class="card text-white bg-warning mb-3">
-        <div class="card-body">
-            <h5>Produto Mais Vendido</h5>
-            <h5>{{ $item->produto->nome ?? 'Nenhum' }} ({{ $item->total }})</h5>
-        </div>
-    </div>
-</div>
-@empty
-<div class="col-md-3">
-    <div class="card text-white bg-warning mb-3">
-        <div class="card-body">
-            <h5>Produto Mais Vendido</h5>
-            <h5>Nenhum</h5>
-        </div>
-    </div>
-</div>
-@endforelse
 
         <div class="col-md-3">
-            <div class="card text-white bg-danger mb-3">
-                <div class="card-body">
-                    <h5>Contatos Hoje</h5>
-                    <h2>R$ {{ number_format($totalVendas,2,',','.') }}</h2>
+            <div class="card text-white bg-success mb-3 shadow-sm">
+                <div class="card-body text-center">
+                    <h6 class="card-title text-uppercase opacity-75">Total em Vendas</h6>
+                    <h2 class="fw-bold">R$ {{ number_format($totalVendas, 2, ',', '.') }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card text-white bg-warning mb-3 shadow-sm">
+                <div class="card-body text-center">
+                    <h6 class="card-title text-uppercase opacity-75">Top Produto</h6>
+                    <h2 class="fw-bold text-truncate" title="{{ $produtosMaisVendidos->first()->produto->nome ?? 'Nenhum' }}">
+                        {{ $produtosMaisVendidos->first()->produto->nome ?? 'Nenhum' }}
+                    </h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card text-white bg-info mb-3 shadow-sm">
+                <div class="card-body text-center">
+                    <h6 class="card-title text-uppercase opacity-75">Top Serviço</h6>
+                    <h2 class="fw-bold text-truncate" title="{{ $servicosMaisEfetuados->first()->servico->nome ?? 'Nenhum' }}">
+                        {{ $servicosMaisEfetuados->first()->servico->nome ?? 'Nenhum' }}
+                    </h2>
                 </div>
             </div>
         </div>
@@ -60,31 +53,63 @@
     <div class="row">
 
         <div class="col-md-6">
-
-            <div class="card">
-                <div class="card-header">
-                    Vendas por mês
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white fw-bold">
+                    <i class="fas fa-chart-line me-1"></i> Ranking de Produtos
                 </div>
-
                 <div class="card-body">
-                    <canvas id="graficoVendas"></canvas>
+                    <table class="table table-hover table-sm mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>#</th>
+                                <th>Produto</th>
+                                <th class="text-end">Quantidade</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($produtosMaisVendidos as $index => $item)
+                            <tr>
+                                <td>{{ $index + 1 }}º</td>
+                                <td class="fw-bold text-primary">{{ $item->produto->nome ?? 'N/A' }}</td>
+                                <td class="text-end">{{ $item->total }}</td>
+                            </tr>
+                            @empty
+                            <tr><td colspan="3" class="text-center">Nenhum dado</td></tr>
+                            @endforelse
+                        </tbody>
+                    </table>
                 </div>
             </div>
-
         </div>
 
         <div class="col-md-6">
-
-            <div class="card">
-                <div class="card-header">
-                    Produtos mais vendidos
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white fw-bold">
+                    <i class="fas fa-tools me-1"></i> Ranking de Serviços
                 </div>
-
                 <div class="card-body">
-                    <canvas id="graficoProdutos"></canvas>
+                    <table class="table table-hover table-sm mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>#</th>
+                                <th>Serviço</th>
+                                <th class="text-end">Quantidade</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($servicosMaisEfetuados as $index => $item)
+                            <tr>
+                                <td>{{ $index + 1 }}º</td>
+                                <td class="fw-bold text-success">{{ $item->servico->nome ?? 'N/A' }}</td>
+                                <td class="text-end">{{ $item->total }}</td>
+                            </tr>
+                            @empty
+                            <tr><td colspan="3" class="text-center">Nenhum dado</td></tr>
+                            @endforelse
+                        </tbody>
+                    </table>
                 </div>
             </div>
-
         </div>
 
     </div>

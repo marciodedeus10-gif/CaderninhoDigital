@@ -29,11 +29,20 @@ class DashboardController extends Controller
         $totalVendas = ItemVenda::sum('subtotal');
 
         $produtosMaisVendidos = ItemVenda::select('produto_id', DB::raw('SUM(quantidade) as total'))
-    ->groupBy('produto_id')
-    ->orderByDesc('total')
-    ->with('produto') // relacionamento
-    ->take(3)
-    ->get();
+            ->whereNotNull('produto_id')
+            ->groupBy('produto_id')
+            ->orderByDesc('total')
+            ->with('produto')
+            ->take(5)
+            ->get();
+
+        $servicosMaisEfetuados = ItemVenda::select('servico_id', DB::raw('SUM(quantidade) as total'))
+            ->whereNotNull('servico_id')
+            ->groupBy('servico_id')
+            ->orderByDesc('total')
+            ->with('servico')
+            ->take(5)
+            ->get();
 
         $ultimasVendas = Venda::with(['cliente', 'itens.produto'])->latest()->take(5)->get();
 
@@ -41,6 +50,7 @@ class DashboardController extends Controller
             'totalClientes',
             'totalVendas',
             'produtosMaisVendidos',
+            'servicosMaisEfetuados',
             'ultimasVendas'
         ));
     }
