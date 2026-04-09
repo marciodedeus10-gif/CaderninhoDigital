@@ -118,8 +118,57 @@
         @endforelse
     </div>
 
+    {{-- Barra de Filtros Unificada --}}
+    <div class="card border-0 shadow-sm mt-5 mb-3 rounded-4 overflow-hidden">
+        <div class="card-header bg-white py-3 border-0">
+            <h6 class="fw-bold mb-0 text-primary">
+                <i class="bi bi-filter-left me-2"></i>Filtros de Busca
+            </h6>
+        </div>
+        <div class="card-body pt-0 pb-4">
+            <form method="GET" action="{{ route('oportunidades.index') }}" class="row g-3">
+                <div class="col-md-2">
+                    <label class="form-label small fw-bold text-muted">Data Início</label>
+                    <input type="date" name="data_inicio" class="form-control border-0 bg-light" value="{{ request('data_inicio') }}">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label small fw-bold text-muted">Data Fim</label>
+                    <input type="date" name="data_fim" class="form-control border-0 bg-light" value="{{ request('data_fim') }}">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label small fw-bold text-muted">Cidade</label>
+                    <select name="cidade" class="form-select border-0 bg-light">
+                        <option value="">Todas as Cidades</option>
+                        @foreach($cidades as $cidade)
+                            <option value="{{ $cidade }}" {{ request('cidade') == $cidade ? 'selected' : '' }}>{{ $cidade }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label small fw-bold text-muted">Bairro</label>
+                    <select name="bairro" class="form-select border-0 bg-light">
+                        <option value="">Todos os Bairros</option>
+                        @foreach($bairros as $bairro)
+                            <option value="{{ $bairro }}" {{ request('bairro') == $bairro ? 'selected' : '' }}>{{ $bairro }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-2 d-flex align-items-end gap-2">
+                    <button type="submit" class="btn btn-primary shadow-sm flex-grow-1">
+                        <i class="bi bi-search"></i>
+                    </button>
+                    @if(request()->anyFilled(['data_inicio', 'data_fim', 'cidade', 'bairro']))
+                        <a href="{{ route('oportunidades.index') }}" class="btn btn-light border" title="Limpar Filtros">
+                            <i class="bi bi-x-lg"></i>
+                        </a>
+                    @endif
+                </div>
+            </form>
+        </div>
+    </div>
+
     {{-- Lista Geral --}}
-    <div class="card border-0 shadow-sm mt-5 rounded-4 overflow-hidden">
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
         <div class="card-header bg-white py-3">
             <h5 class="fw-bold mb-0">Todas as Oportunidades</h5>
         </div>

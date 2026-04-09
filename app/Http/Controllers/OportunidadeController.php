@@ -9,22 +9,52 @@ use Carbon\Carbon;
 
 class OportunidadeController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $hoje = Carbon::today();
+        $hoje = \Carbon\Carbon::today();
         
         $oportunidadesHoje = Oportunidade::with('cliente')
             ->whereDate('data_contato', $hoje)
             ->orderBy('created_at', 'desc')
             ->get();
 
-        $todasOportunidades = Oportunidade::with('cliente')
-            ->orderBy('data_contato', 'desc')
-            ->paginate(10);
+        $query = Oportunidade::with('cliente');
+
+        if ($request->filled('data_inicio') && $request->filled('data_fim')) {
+            $query->whereBetween('data_contato', [$request->data_inicio, $request->data_fim]);
+        } elseif ($request->filled('data_inicio')) {
+            $query->where('data_contato', '>=', $request->data_inicio);
+        } elseif ($request->filled('data_fim')) {
+            $query->where('data_contato', '<=', $request->data_fim);
+        }
+
+        if ($request->filled('cidade')) {
+            $query->whereHas('cliente', function ($q) use ($request) {
+                $q->where('cidade', $request->cidade);
+            });
+        }
+
+        if ($request->filled('bairro')) {
+            $query->whereHas('cliente', function ($q) use ($request) {
+                $q->where('bairro', $request->bairro);
+            });
+        }
+
+        $todasOportunidades = $query->orderBy('data_contato', 'desc')
+            ->paginate(10)
+            ->appends($request->all());
 
         $clientes = Cliente::all();
+        $cidades = Cliente::distinct()->whereNotNull('cidade')->pluck('cidade');
+        $bairros = Cliente::distinct()->whereNotNull('bairro')->pluck('bairro');
 
-        return view('oportunidades.index', compact('oportunidadesHoje', 'todasOportunidades', 'clientes'));
+        return view('oportunidades.index', compact(
+            'oportunidadesHoje', 
+            'todasOportunidades', 
+            'clientes', 
+            'cidades', 
+            'bairros'
+        ));
     }
 
     public function store(Request $request)
