@@ -58,9 +58,9 @@
                     <tr>
                         <td>{{ $cliente->nome }}</td>
                         <td>{{ $cliente->cidade }}</td>
-                        <td>{{ $cliente->Rua }}</td>
+                        <td>{{ $cliente->bairro }}</td>
+                        <td>{{ $cliente->endereco }}</td>
                         <td>{{ $cliente->cep }}</td>
-                        <td>{{ $cliente->Ações }}</td>
                         <td>
                             <a href="{{ route('clientes.show', $cliente->id) }}" class="btn btn-info btn-sm">Ver</a>
                             <a href="{{ route('clientes.edit', $cliente->id) }}" class="btn btn-warning btn-sm">Editar</a>
