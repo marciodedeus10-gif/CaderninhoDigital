@@ -20,8 +20,24 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 // ============================================================
 
 Route::get('/', function () {
-    return view('home');
+    return view('welcome');
 });
+
+Route::get('/sobrenos', function () {
+    return view('sobrenos');
+})->name('sobrenos');
+
+Route::get('/relatos', function () {
+    return view('relatos');
+})->name('relatos');
+
+Route::get('/o-app', function () {
+    return view('o-app');
+})->name('o-app');
+
+Route::get('/beneficios', function () {
+    return view('beneficios');
+})->name('beneficios');
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
