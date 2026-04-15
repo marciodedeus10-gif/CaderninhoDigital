@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MonitorCare - Monitoramento de Idosos</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+    <div class="logo">
+        <img src="assets/img/ChatGPT Image 19 de nov. de 2025, 14_00_07.png" alt="Logo">
+    </div>
+
+    <div class="hamburguer" onclick="toggleMenu()">☰</div>
+
+    <!-- MENU DESKTOP -->
+    <ul class="menu-desktop">
+        <li><a href="./sobrenos.html">Sobre nós</a></li>
+        <li><a href="./relatos.html">Relatos</a></li>
+        <li><a href="./Oapp.html">Primeiros Passos</a></li>
+        <li><a href="./beneficios.html">Benefícios</a></li>
+    </ul>
+
+    <div class="login-desktop">
+        <a href="login.html" class="btn">Login</a>
+        <a href="cadastro.html" class="btn cad">Cadastro</a>
+    </div>
+
+    <!-- MENU MOBILE CORRIGIDO -->
+    <div class="menu-mobile" id="menuMobile">
+        <a href="./sobrenos.html">Sobre nós</a>
+        <a href="./relatos.html">Relatos</a>
+        <a href="./Oapp.html">Primeiros Passos</a>
+        <a href="./beneficios.html">Benefícios</a>
+        <a href="login.html" class="btn">Login</a>
+        <a href="cadastro.html" class="btn cad">Cadastro</a>
+    </div>
+</nav>
+
+<!-- Overlay -->
+<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+<!-- CARROSSEL -->
+<section class="carrossel-container">
+    <div class="carrossel">
+        <img src="assets/img/abracos-casal-senior-em-casa.jpg" class="slide ativo">
+        <img src="assets/img/noite-a-beira-mar.jpg" class="slide">
+        <img src="assets/img/um-casal-de-idosos-afetuosos-mostrando-amor-um-pelo-outro.jpg" class="slide">
+    </div>
+</section>
+
+<!-- SLOGAN -->
+<section class="slogan" id="sobre">
+    <h1>Cuidando de quem sempre cuidou de você:<br>
+    Monitoramento inteligente e humano para idosos em tempo real.</h1>
+    <p>Acompanhe hidratação, alimentação, prova de vida e interações diárias — tudo pelo painel web.</p>
+</section>
+
+<!-- PLANOS -->
+<section class="planos" id="planos">
+    <h2>Nossos Planos</h2>
+    <div class="cards">
+        <div class="card">
+            <h3>Plano Bem-Estar</h3>
+            <p>Monitoramento básico: hidratação, alimentação e notificações.</p>
+            <button onclick="contratar('Bem-Estar')">Contratar</button>
+        </div>
+        <div class="card destaque">
+            <h3>Bem-Estar + Longevidade</h3>
+            <p>Inclui interação por voz/texto e avaliações de rotina.</p>
+            <button onclick="contratar('Longevidade')">Contratar</button>
+        </div>
+        <div class="card">
+            <h3>Bem Total</h3>
+            <p>Monitoramento completo com prova de vida contínua.</p>
+            <button onclick="contratar('Bem Total')">Contratar</button>
+        </div>
+    </div>
+</section>
+
+<!-- SCRIPT -->
+<script>
+function toggleMenu() {
+    const menu = document.getElementById("menuMobile");
+    const overlay = document.getElementById("overlay");
+
+    menu.classList.toggle("ativo");
+    overlay.classList.toggle("ativo");
+}
+
+// Carrossel simples
+let slides = document.querySelectorAll('.slide');
+let index = 0;
+setInterval(() => {
+    slides[index].classList.remove('ativo');
+    index = (index + 1) % slides.length;
+    slides[index].classList.add('ativo');
+}, 4000);
+
+// Função de exemplo
+function contratar(plano) {
+    alert('Você selecionou o plano: ' + plano);
+}
+
+//
+function toggleMenu() {
+    const menu = document.getElementById("menuMobile");
+    const overlay = document.getElementById("overlay");
+
+    menu.classList.toggle("ativo");
+    overlay.classList.toggle("ativo");
+
+    // Garante que links ficam clicáveis
+    if (menu.classList.contains("ativo")) {
+        menu.style.pointerEvents = "auto";
+    } else {
+        menu.style.pointerEvents = "none";
+    }
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,315 @@
+/* ======================= RESET ======================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+/* ======================= NAVBAR ======================= */
+.navbar {
+    width: 100%;
+    padding: 10px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(45deg, #4364f7, #6fb1fc, #3f51b5);
+    color: white;
+    height: 90px;
+    position: relative;
+    z-index: 2000;
+}
+
+.logo img {
+    height: 190px;
+    width: auto;
+}
+
+/* MENU DESKTOP */
+.menu-desktop {
+    list-style: none;
+    display: flex;
+    gap: 25px;
+    align-items: center;
+}
+
+.menu-desktop a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 16px;
+    transition: color 0.3s ease;
+}
+
+.menu-desktop a:hover {
+    color: #dce3ff;
+}
+
+/* LOGIN DESKTOP */
+.login-desktop {
+    display: flex;
+    align-items: center;
+}
+
+.login-desktop .btn {
+    padding: 8px 18px;
+    color: white;
+    border: 2px solid white;
+    border-radius: 6px;
+    text-decoration: none;
+    margin-left: 10px;
+    transition: 0.3s;
+}
+
+.login-desktop .cad {
+    background: white;
+    color: #4364f7;
+}
+
+.login-desktop .btn:hover {
+    opacity: 0.7;
+}
+
+/* BOTÃO HAMBÚRGUER */
+.hamburguer {
+    display: none;
+    font-size: 32px;
+    cursor: pointer;
+    user-select: none;
+    transition: color 0.3s ease;
+}
+
+.hamburguer:hover {
+    color: #dce3ff;
+}
+
+/* ======================= MENU MOBILE (CORRIGIDO) ======================= */
+.menu-mobile {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    right: -280px;
+    /* escondido */
+    width: 250px;
+    height: 100%;
+    background: rgba(63, 81, 181, 0.95);
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    transition: right 0.3s ease;
+    z-index: 3000;
+    /* MAIOR z-index de todos */
+    border-radius: 8px 0 0 8px;
+}
+
+.menu-mobile a,
+.menu-mobile .btn {
+    font-size: 18px;
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+    width: 100%;
+    text-align: center;
+    padding: 10px 0;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    opacity: 0;
+    transform: translateX(50px);
+    pointer-events: auto;
+    /* garante clique */
+}
+
+/* menu aberto */
+.menu-mobile.ativo {
+    right: 0;
+}
+
+.menu-mobile.ativo a,
+.menu-mobile.ativo .btn {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* atraso suave */
+.menu-mobile.ativo a:nth-child(1) {
+    transition-delay: 0.1s;
+}
+
+.menu-mobile.ativo a:nth-child(2) {
+    transition-delay: 0.2s;
+}
+
+.menu-mobile.ativo a:nth-child(3) {
+    transition-delay: 0.3s;
+}
+
+.menu-mobile.ativo a:nth-child(4) {
+    transition-delay: 0.4s;
+}
+
+.menu-mobile.ativo a:nth-child(5) {
+    transition-delay: 0.5s;
+}
+
+.menu-mobile.ativo a:nth-child(6) {
+    transition-delay: 0.6s;
+}
+
+/* hover */
+.menu-mobile a:hover,
+.menu-mobile .btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Cadastro diferenciado */
+.menu-mobile .cad {
+    background: white;
+    color: #3f51b5;
+}
+
+/* ======================= OVERLAY (CORRIGIDO FINAL) ======================= */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    pointer-events: none;
+    /* 🔥 NÃO BLOQUEIA CLIQUE */
+    transition: opacity 0.3s ease;
+    z-index: 2500;
+    /* continua abaixo do menu */
+}
+
+.overlay.ativo {
+    opacity: 1;
+    pointer-events: auto;
+    /* só permite clicar para FECHAR */
+}
+
+
+/* ======================= RESPONSIVIDADE ======================= */
+@media (max-width: 900px) {
+    .hamburguer {
+        display: block;
+    }
+
+    .menu-desktop,
+    .login-desktop {
+        display: none;
+    }
+}
+
+/* ======================= CARROSSEL ======================= */
+.carrossel-container {
+    width: 100%;
+    height: 600px;
+    overflow: hidden;
+}
+
+.carrossel {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.slide {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    opacity: 0;
+    transition: opacity 1s ease;
+}
+
+.slide.ativo {
+    opacity: 1;
+}
+
+/* ======================= SLOGAN ======================= */
+.slogan {
+    text-align: center;
+    padding: 40px;
+    background: #f7f7f7;
+}
+
+.slogan h1 {
+    font-size: 32px;
+    margin-bottom: 10px;
+    color: #3f51b5;
+}
+
+.slogan p {
+    font-size: 18px;
+    color: #444;
+}
+
+/* ======================= PLANOS ======================= */
+.planos {
+    text-align: center;
+    padding: 50px 0;
+}
+
+.cards {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 30px;
+    flex-wrap: wrap;
+}
+
+.card {
+    width: 260px;
+    padding: 25px;
+    background: linear-gradient(45deg, #6fb1fc, #4364f7);
+    color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s;
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+.card.destaque {
+    background: linear-gradient(45deg, #4364f7, #3f51b5);
+}
+
+.card button {
+    margin-top: 15px;
+    padding: 10px 20px;
+    background: white;
+    color: #4364f7;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.card button:hover {
+    background: #dce3ff;
+}
+
+.carrossel-container,
+.carrossel,
+.slide {
+    z-index: 1 !important;
+}
+
+.menu-mobile {
+    z-index: 9999 !important;
+}
+
+.overlay {
+    z-index: 9998 !important;
+}
+
+nav.navbar {
+    position: relative;
+    z-index: 9999 !important;
+}
