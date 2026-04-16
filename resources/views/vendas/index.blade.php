@@ -1,9 +1,5 @@
 @extends('layouts.app')
 
-@section('header_styles')
-<link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
-@endsection
-
 @section('content')
 <div class="container py-4">
 
@@ -11,7 +7,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h2 class="fw-bold mb-0 text-dark">Vendas</h2>
-            <p class="text-muted small mb-0">Gerencie e filtre suas transações</p>
+            <p class="text-muted small mb-0">Histórico completo de transações</p>
         </div>
         <a href="{{ route('vendas.create') }}" class="btn btn-success shadow-sm px-4 py-2" style="border-radius: 10px;">
             <i class="bi bi-plus-circle me-1"></i> Nova Venda
@@ -23,28 +19,15 @@
         <div class="card-body p-3">
             <form method="GET" action="{{ route('vendas.index') }}" class="row g-2 align-items-end">
                 
-                {{-- Busca de Cliente --}}
-                <div class="col-md-4">
-                    <label class="form-label small fw-bold text-muted">Pesquisar Cliente</label>
-                    <select name="cliente_id" id="cliente_id" class="form-select form-select-sm">
-                        <option value="">Todos os Clientes</option>
-                        @foreach ($clientes as $cliente)
-                            <option value="{{ $cliente->id }}" {{ request('cliente_id') == $cliente->id ? 'selected' : '' }}>
-                                {{ $cliente->nome }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div class="col-md-2">
-                    <label class="form-label small fw-bold text-muted">De:</label>
+                <div class="col-md-3">
+                    <label class="form-label small fw-bold text-muted">A partir de:</label>
                     <div class="input-group input-group-sm">
                         <span class="input-group-text bg-white border-end-0 text-muted p-1 px-2"><i class="bi bi-calendar" style="font-size: 0.8rem;"></i></span>
                         <input type="date" name="data_de" class="form-control border-start-0" value="{{ request('data_de') }}">
                     </div>
                 </div>
 
-                <div class="col-md-2">
+                <div class="col-md-3">
                     <label class="form-label small fw-bold text-muted">Até:</label>
                     <div class="input-group input-group-sm">
                         <span class="input-group-text bg-white border-end-0 text-muted p-1 px-2"><i class="bi bi-calendar" style="font-size: 0.8rem;"></i></span>
@@ -52,21 +35,21 @@
                     </div>
                 </div>
 
-                <div class="col-md-2">
-                    <label class="form-label small fw-bold text-muted">Ordenar</label>
+                <div class="col-md-3">
+                    <label class="form-label small fw-bold text-muted">Ordenar por</label>
                     <select name="sort" class="form-select form-select-sm">
                         <option value="recentes" {{ request('sort') == 'recentes' ? 'selected' : '' }}>📅 Recentes</option>
                         <option value="antigas" {{ request('sort') == 'antigas' ? 'selected' : '' }}>📅 Antigas</option>
-                        <option value="alfabetica" {{ request('sort') == 'alfabetica' ? 'selected' : '' }}>🔤 Nome A-Z</option>
+                        <option value="alfabetica" {{ request('sort') == 'alfabetica' ? 'selected' : '' }}>🔤 Nome Cliente</option>
                     </select>
                 </div>
 
-                <div class="col-md-2 d-flex gap-2">
+                <div class="col-md-3 d-flex gap-2">
                     <button type="submit" class="btn btn-primary btn-sm flex-grow-1">
                         <i class="bi bi-funnel"></i> Filtrar
                     </button>
                     <a href="{{ route('vendas.index') }}" class="btn btn-outline-secondary btn-sm" title="Limpar Filtros">
-                        <i class="bi bi-x-lg"></i>
+                        <i class="bi bi-x-lg"></i> Limpar
                     </a>
                 </div>
 
@@ -155,23 +138,6 @@
 
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        if (document.getElementById('cliente_id')) {
-            new TomSelect("#cliente_id", {
-                create: false,
-                sortField: {
-                    field: "text",
-                    direction: "asc"
-                },
-                placeholder: "Pesquisar por nome...",
-                allowEmptyOption: true
-            });
-        }
-    });
-</script>
-
 <style>
     body.dark-mode .card { background-color: #1a1a2e !important; }
     body.dark-mode .bg-white { background-color: #1a1a2e !important; }
@@ -189,25 +155,6 @@
     
     .table td { border: none; }
     .badge { letter-spacing: 0.5px; }
-
-    /* Tom Select Dark Mode */
-    body.dark-mode .ts-control {
-        background-color: #0f0f1a !important;
-        color: #e0e0f0 !important;
-        border-color: #2a2a4a !important;
-    }
-    body.dark-mode .ts-dropdown {
-        background-color: #1a1a2e !important;
-        color: #e0e0f0 !important;
-        border-color: #2a2a4a !important;
-    }
-    body.dark-mode .ts-dropdown .active {
-        background-color: #2563eb !important;
-        color: #fff !important;
-    }
-    body.dark-mode .ts-control input {
-        color: #e0e0f0 !important;
-    }
 
     /* Custom pagination colors for dark mode */
     body.dark-mode .pagination .page-link {

@@ -17,11 +17,6 @@ class VendaController extends Controller
     {
         $query = Venda::with('cliente', 'itens.produto');
 
-        // Filtro por Cliente
-        if ($request->filled('cliente_id')) {
-            $query->where('cliente_id', $request->cliente_id);
-        }
-
         // Filtro por Intervalo de Datas
         if ($request->filled('data_de')) {
             $query->whereDate('data_venda', '>=', $request->data_de);
@@ -44,12 +39,10 @@ class VendaController extends Controller
         }
 
         $vendas = $query->paginate(10);
-        
-        // 🔥 Buscar todos os clientes para o Autocomplete dos filtros
-        $clientes = \App\Models\Cliente::orderBy('nome', 'asc')->get();
 
-        return view('vendas.index', compact('vendas', 'clientes'));
+        return view('vendas.index', compact('vendas'));
     }
+
 
 
 
