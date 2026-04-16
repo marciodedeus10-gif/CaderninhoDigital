@@ -13,17 +13,56 @@ use Illuminate\Support\Facades\Auth;
 
 class VendaController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $vendas = Venda::with('cliente', 'itens.produto')->get();
-        return view('vendas.index', compact('vendas'));
+        $query = Venda::with('cliente', 'itens.produto');
+
+        // Filtro por Cliente
+        if ($request->filled('cliente_id')) {
+            $query->where('cliente_id', $request->cliente_id);
+        }
+
+        // Filtro por Intervalo de Datas
+        if ($request->filled('data_de')) {
+            $query->whereDate('data_venda', '>=', $request->data_de);
+        }
+        if ($request->filled('data_ate')) {
+            $query->whereDate('data_venda', '<=', $request->data_ate);
+        }
+
+        // Ordenação
+        $sort = $request->get('sort', 'recentes');
+        if ($sort === 'alfabetica') {
+            $query->join('clientes', 'vendas.cliente_id', '=', 'clientes.id')
+                  ->select('vendas.*') 
+                  ->orderBy('clientes.nome', 'asc');
+        } elseif ($sort === 'antigas') {
+            $query->orderBy('data_venda', 'asc')->orderBy('created_at', 'asc');
+        } else {
+            // Default: Recentes
+            $query->orderBy('data_venda', 'desc')->orderBy('created_at', 'desc');
+        }
+
+        $vendas = $query->paginate(10);
+        
+        // 🔥 Buscar todos os clientes para o Autocomplete dos filtros
+        $clientes = \App\Models\Cliente::orderBy('nome', 'asc')->get();
+
+        return view('vendas.index', compact('vendas', 'clientes'));
     }
 
-    public function create()
+
+
+
+
+
+    public function create(Request $request)
     {
         $clientes = Cliente::all();
-        return view('vendas.create', compact('clientes'));
+        $selected_cliente_id = $request->cliente_id;
+        return view('vendas.create', compact('clientes', 'selected_cliente_id'));
     }
+
 
     public function store(Request $request)
     {

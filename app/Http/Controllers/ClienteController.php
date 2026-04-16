@@ -23,7 +23,7 @@ class ClienteController extends Controller
         $query->where('bairro', $request->bairro);
     }
 
-    $clientes = $query->get();
+    $clientes = $query->orderBy('nome', 'asc')->paginate(10);
 
     // 🔥 pega cidades e bairros únicos cadastrados
     $cidades = Cliente::select('cidade')->distinct()->pluck('cidade');
@@ -39,7 +39,7 @@ class ClienteController extends Controller
 
 public function store(Request $request)
 {
-    Cliente::create([
+    $cliente = Cliente::create([
         'nome' => $request->nome,
         'telefone' => $request->telefone,
         'email' => $request->email,
@@ -51,12 +51,27 @@ public function store(Request $request)
         'numero' => $request->numero,
         'cpf_cnpj' => $request->cpf_cnpj,
         'observacoes' => $request->observacoes,
-        'ativo' => 1
+        'ativo' => $request->ativo ?? 1
     ]);
+
+    if ($request->origin === 'venda') {
+        return redirect()->route('vendas.create', ['cliente_id' => $cliente->id])
+            ->with('success', 'Cliente cadastrado e selecionado!');
+    }
 
     return redirect()->route('clientes.index')
         ->with('success', 'Cliente cadastrado com sucesso!');
 }
+
+
+    public function show(Cliente $cliente)
+    {
+        $cliente->load(['vendas' => function($query) {
+            $query->orderBy('data_venda', 'desc');
+        }, 'vendas.itens.produto', 'vendas.itens.servico']);
+
+        return view('clientes.show', compact('cliente'));
+    }
 
     public function edit(Cliente $cliente)
     {
