@@ -25,11 +25,12 @@ class ClienteController extends Controller
 
     $clientes = $query->orderBy('nome', 'asc')->paginate(10);
 
-    // 🔥 pega cidades e bairros únicos cadastrados
+    // 🔥 pega cidades, bairros e nomes únicos cadastrados para os filtros e autocomplete
     $cidades = Cliente::select('cidade')->distinct()->pluck('cidade');
     $bairros = Cliente::select('bairro')->distinct()->pluck('bairro');
+    $nomesClientes = Cliente::select('nome')->orderBy('nome')->distinct()->pluck('nome');
 
-    return view('clientes.index', compact('clientes', 'cidades', 'bairros'));
+    return view('clientes.index', compact('clientes', 'cidades', 'bairros', 'nomesClientes'));
 }
 
     public function create()

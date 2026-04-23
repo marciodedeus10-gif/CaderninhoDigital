@@ -40,7 +40,7 @@
                     <select name="sort" class="form-select form-select-sm">
                         <option value="recentes" {{ request('sort') == 'recentes' ? 'selected' : '' }}>📅 Recentes</option>
                         <option value="antigas" {{ request('sort') == 'antigas' ? 'selected' : '' }}>📅 Antigas</option>
-                        <option value="alfabetica" {{ request('sort') == 'alfabetica' ? 'selected' : '' }}>🔤 Nome Cliente</option>
+                        <option value="alfabetica" {{ request('sort') == 'alfabetica' ? 'selected' : '' }}>🔤 Ordem Alfabética</option>
                     </select>
                 </div>
 
@@ -81,18 +81,23 @@
                                         <div class="avatar-xs me-2 bg-secondary bg-opacity-10 text-secondary rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 28px; height: 28px; font-size: 0.8rem;">
                                             {{ strtoupper(substr($venda->cliente->nome ?? '?', 0, 1)) }}
                                         </div>
-                                        <span class="text-dark fw-semibold">{{ $venda->cliente->nome ?? 'Cliente não encontrado' }}</span>
+                                        <div>
+                                            <span class="d-block text-dark fw-semibold">{{ $venda->cliente->nome ?? 'Cliente não encontrado' }}</span>
+                                            <small class="text-muted d-block" style="font-size: 0.75rem;">
+                                                <i class="bi bi-telephone"></i> {{ $venda->cliente->telefone ?? 'Não informado' }}
+                                            </small>
+                                        </div>
                                     </div>
                                 </td>
                                 <td>
-                                    <span class="text-dark small">{{ \Carbon\Carbon::parse($venda->data_venda)->format('d/m/Y') }}</span>
+                                    <span class="text-dark small"><i class="bi bi-calendar-event"></i> {{ \Carbon\Carbon::parse($venda->data_venda)->format('d/m/Y') }}</span>
                                     <small class="text-muted d-block" style="font-size: 0.7rem;">Criada em: {{ $venda->created_at->format('d/m/Y H:i') }}</small>
                                 </td>
                                 <td>
                                     @php
                                         $statusClass = match(strtolower($venda->status)) {
                                             'pago', 'finalizada', 'concluída' => 'bg-success',
-                                            'pendente', 'aguardando' => 'bg-warning text-dark',
+                                            'aberta', 'pendente', 'aguardando' => 'bg-warning text-dark',
                                             'cancelada' => 'bg-danger',
                                             default => 'bg-secondary'
                                         };

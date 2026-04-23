@@ -23,6 +23,9 @@ class ProdutoController extends Controller
         $request->validate([
             'nome' => 'required',
             'preco' => 'required|numeric',
+            'estoque' => 'nullable|integer',
+            'estoque_minimo' => 'nullable|integer',
+            'preco_custo' => 'nullable|numeric'
         ]);
 
         $dados = $request->all();
@@ -46,6 +49,9 @@ class ProdutoController extends Controller
     $request->validate([
         'nome' => 'required',
         'preco' => 'required|numeric',
+        'estoque' => 'nullable|integer',
+        'estoque_minimo' => 'nullable|integer',
+        'preco_custo' => 'nullable|numeric'
     ]);
 
     $dados = $request->all();
@@ -65,5 +71,38 @@ class ProdutoController extends Controller
 
         return redirect()->route('produtos.index')
             ->with('success', 'Produto removido com sucesso!');
+    }
+
+    public function estoque(Produto $produto)
+    {
+        $movimentacoes = \App\Models\MovimentacaoEstoque::where('produto_id', $produto->id)
+            ->latest()
+            ->paginate(15);
+            
+        return view('produtos.estoque', compact('produto', 'movimentacoes'));
+    }
+
+    public function adicionarMovimentacao(Request $request, Produto $produto)
+    {
+        $request->validate([
+            'tipo' => 'required|in:entrada,saida',
+            'quantidade' => 'required|integer|min:1',
+            'observacao' => 'nullable|string|max:255'
+        ]);
+
+        \App\Models\MovimentacaoEstoque::create([
+            'produto_id' => $produto->id,
+            'tipo' => $request->tipo,
+            'quantidade' => $request->quantidade,
+            'observacao' => $request->observacao
+        ]);
+
+        if ($request->tipo === 'entrada') {
+            $produto->increment('estoque', $request->quantidade);
+        } else {
+            $produto->decrement('estoque', $request->quantidade);
+        }
+
+        return back()->with('success', 'Movimentação registrada com sucesso!');
     }
 }

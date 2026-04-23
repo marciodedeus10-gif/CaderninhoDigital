@@ -464,7 +464,7 @@
             {{-- Avatar + Dropdown Perfil --}}
             <div style="position: relative;">
                 <button class="topbar-avatar-btn" id="profileToggle">
-                    <img src="{{ auth()->check() ? (auth()->user()->avatar ? asset('storage/' . auth()->user()->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name) . '&background=random') : 'https://i.pravatar.cc/40' }}" class="topbar-avatar" alt="Avatar">
+                    <img src="{{ auth()->check() ? (auth()->user()->foto ? asset('storage/' . auth()->user()->foto) : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name) . '&background=random') : 'https://i.pravatar.cc/40' }}" class="topbar-avatar" alt="Avatar">
                     <div class="topbar-user-info">
                         <span class="topbar-user-name">
                             {{ auth()->check() ? auth()->user()->name : 'Usuário' }}
@@ -479,7 +479,7 @@
                 <div class="profile-dropdown" id="profileDropdown">
 
                     <div class="profile-dropdown-header">
-                        <img src="{{ auth()->check() ? (auth()->user()->avatar ? asset('storage/' . auth()->user()->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name) . '&background=random') : 'https://i.pravatar.cc/80' }}" alt="Avatar">
+                        <img src="{{ auth()->check() ? (auth()->user()->foto ? asset('storage/' . auth()->user()->foto) : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name) . '&background=random') : 'https://i.pravatar.cc/80' }}" alt="Avatar">
                         <div>
                             <span class="pd-name">{{ auth()->check() ? auth()->user()->name : 'Usuário' }}</span>
                             <span class="pd-email">{{ auth()->check() ? auth()->user()->email : 'usuario@email.com' }}</span>
@@ -572,11 +572,35 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a href="{{ route('financeiro.index') }}"
+                           class="nav-link-item {{ request()->routeIs('financeiro.*') ? 'active' : '' }}"
+                           data-tooltip="Financeiro">
+                            <i class="bi bi-bank nav-icon"></i>
+                            <span class="nav-label">Financeiro</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a href="{{ route('produtos.index') }}"
                            class="nav-link-item {{ request()->routeIs('produtos.*') ? 'active' : '' }}"
                            data-tooltip="Produtos">
                             <i class="bi bi-box-seam nav-icon"></i>
                             <span class="nav-label">Produtos</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('fornecedores.index') }}"
+                           class="nav-link-item {{ request()->routeIs('fornecedores.*') ? 'active' : '' }}"
+                           data-tooltip="Fornecedores">
+                            <i class="bi bi-truck nav-icon"></i>
+                            <span class="nav-label">Fornecedores</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('compras.index') }}"
+                           class="nav-link-item {{ request()->routeIs('compras.*') ? 'active' : '' }}"
+                           data-tooltip="Compras">
+                            <i class="bi bi-cart-check nav-icon"></i>
+                            <span class="nav-label">Compras</span>
                         </a>
                     </li>
                     <li class="nav-item">

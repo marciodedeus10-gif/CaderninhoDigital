@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\BelongsToUser;
 
 class Venda extends Model
 {
+    use BelongsToUser;
     protected $table = 'vendas';
 
     protected $fillable = [

@@ -25,10 +25,25 @@ class DashboardController extends Controller
     {
         $totalClientes = Cliente::count();
 
-        // 👇 ALTERAÇÃO AQUI
-        $totalVendas = ItemVenda::sum('subtotal');
+        // Cálculo do Saldo de Caixa (Mês Atual)
+        $receitasMes = \App\Models\LancamentoFinanceiro::where('user_id', auth()->id())
+            ->where('tipo', 'receita')
+            ->where('status', 'pago')
+            ->whereMonth('data_pagamento', now()->month)
+            ->whereYear('data_pagamento', now()->year)
+            ->sum('valor');
+
+        $despesasMes = \App\Models\LancamentoFinanceiro::where('user_id', auth()->id())
+            ->where('tipo', 'despesa')
+            ->where('status', 'pago')
+            ->whereMonth('data_pagamento', now()->month)
+            ->whereYear('data_pagamento', now()->year)
+            ->sum('valor');
+
+        $saldoCaixa = $receitasMes - $despesasMes;
 
         $produtosMaisVendidos = ItemVenda::select('produto_id', DB::raw('SUM(quantidade) as total'))
+            ->whereHas('venda')
             ->whereNotNull('produto_id')
             ->groupBy('produto_id')
             ->orderByDesc('total')
@@ -37,6 +52,7 @@ class DashboardController extends Controller
             ->get();
 
         $servicosMaisEfetuados = ItemVenda::select('servico_id', DB::raw('SUM(quantidade) as total'))
+            ->whereHas('venda')
             ->whereNotNull('servico_id')
             ->groupBy('servico_id')
             ->orderByDesc('total')
@@ -46,12 +62,17 @@ class DashboardController extends Controller
 
         $ultimasVendas = Venda::with(['cliente', 'itens.produto'])->latest()->take(5)->get();
 
+        $produtosEstoqueBaixo = Produto::whereColumn('estoque', '<=', 'estoque_minimo')
+            ->where('ativo', 1)
+            ->get();
+
         return view('dashboard.dashboard', compact(
             'totalClientes',
-            'totalVendas',
+            'saldoCaixa',
             'produtosMaisVendidos',
             'servicosMaisEfetuados',
-            'ultimasVendas'
+            'ultimasVendas',
+            'produtosEstoqueBaixo'
         ));
     }
 }

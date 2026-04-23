@@ -29,8 +29,8 @@ class VendaController extends Controller
         $sort = $request->get('sort', 'recentes');
         if ($sort === 'alfabetica') {
             $query->join('clientes', 'vendas.cliente_id', '=', 'clientes.id')
-                  ->select('vendas.*') 
-                  ->orderBy('clientes.nome', 'asc');
+                ->select('vendas.*')
+                ->orderBy('clientes.nome', 'asc');
         } elseif ($sort === 'antigas') {
             $query->orderBy('data_venda', 'asc')->orderBy('created_at', 'asc');
         } else {
@@ -86,7 +86,38 @@ class VendaController extends Controller
         $total = $venda->total;
         $produtos = Produto::all();
         $servicos = Servico::all();
-        return view('vendas.show', compact('venda', 'total', 'produtos', 'servicos'));
+
+        // Produtos mais vendidos
+        $produtosMaisVendidosIds = \App\Models\ItemVenda::whereHas('venda')
+            ->whereNotNull('produto_id')
+            ->select('produto_id', \Illuminate\Support\Facades\DB::raw('SUM(quantidade) as total'))
+            ->groupBy('produto_id')
+            ->orderByDesc('total')
+            ->limit(5)
+            ->pluck('produto_id');
+
+        if ($produtosMaisVendidosIds->isEmpty()) {
+            $produtosMaisVendidos = Produto::take(5)->get();
+        } else {
+            $produtosMaisVendidos = Produto::whereIn('id', $produtosMaisVendidosIds)->get();
+        }
+
+        // Serviços mais vendidos
+        $servicosMaisVendidosIds = \App\Models\ItemVenda::whereHas('venda')
+            ->whereNotNull('servico_id')
+            ->select('servico_id', \Illuminate\Support\Facades\DB::raw('SUM(quantidade) as total'))
+            ->groupBy('servico_id')
+            ->orderByDesc('total')
+            ->limit(5)
+            ->pluck('servico_id');
+
+        if ($servicosMaisVendidosIds->isEmpty()) {
+            $servicosMaisVendidos = Servico::take(5)->get();
+        } else {
+            $servicosMaisVendidos = Servico::whereIn('id', $servicosMaisVendidosIds)->get();
+        }
+
+        return view('vendas.show', compact('venda', 'total', 'produtos', 'servicos', 'produtosMaisVendidos', 'servicosMaisVendidos'));
     }
 
     public function addItem(Request $request, Venda $venda)
@@ -103,6 +134,12 @@ class VendaController extends Controller
 
         if ($venda->status !== 'aberta') {
             return back()->with('error', 'Venda já finalizada!');
+        }
+
+        // Trava de segurança do Estoque
+        $produto = Produto::findOrFail($request->produto_id);
+        if ($produto->estoque < $request->quantidade) {
+            return back()->with('error', "Estoque insuficiente! Apenas {$produto->estoque} unidades disponíveis.");
         }
 
         $subtotal = $request->quantidade * $request->preco;
@@ -170,6 +207,13 @@ class VendaController extends Controller
 
     public function updateItem(Request $request, ItemVenda $item)
     {
+        if ($item->produto_id) {
+            $produto = $item->produto;
+            if ($produto->estoque < $request->quantidade) {
+                return back()->with('error', "Estoque insuficiente! Apenas {$produto->estoque} unidades disponíveis.");
+            }
+        }
+
         $item->quantidade = $request->quantidade;
         $item->subtotal = $item->quantidade * $item->preco;
         $item->save();
@@ -185,7 +229,8 @@ class VendaController extends Controller
         }
 
         $request->validate([
-            'desconto' => 'required|numeric|min:0'
+            'desconto' => 'required|numeric|min:0',
+            'tipo_desconto' => 'nullable|in:valor,porcentagem'
         ]);
 
         $venda = Venda::findOrFail($id);
@@ -194,7 +239,18 @@ class VendaController extends Controller
             return back()->with('error', 'Venda finalizada!');
         }
 
-        $venda->desconto = $request->desconto;
+        $subtotal = $venda->subtotal;
+        $desconto_valor = $request->desconto;
+
+        if ($request->tipo_desconto === 'porcentagem') {
+            $desconto_valor = ($subtotal * $request->desconto) / 100;
+        }
+
+        if ($desconto_valor > $subtotal) {
+            return back()->with('error', 'O desconto não pode ser maior que o subtotal da venda!');
+        }
+
+        $venda->desconto = $desconto_valor;
         $venda->recalcularTotal();
 
         return back()->with('success', 'Desconto atualizado!');
@@ -208,45 +264,60 @@ class VendaController extends Controller
             return back()->with('error', 'Adicione itens antes de finalizar!');
         }
 
+        // Baixa automática de estoque
+        foreach ($venda->itens as $item) {
+            if ($item->produto_id) {
+                $produto = $item->produto;
+                if ($produto->estoque < $item->quantidade) {
+                    return back()->with('error', "O produto {$produto->nome} não tem estoque suficiente para finalizar a venda!");
+                }
+
+                // Deduzir estoque
+                $produto->decrement('estoque', $item->quantidade);
+
+                // Histórico de Saída
+                \App\Models\MovimentacaoEstoque::create([
+                    'produto_id' => $produto->id,
+                    'tipo' => 'saida',
+                    'quantidade' => $item->quantidade,
+                    'observacao' => "Venda #" . $venda->id
+                ]);
+            }
+        }
+
         $venda->status = 'finalizada';
         $venda->save();
+
+        // ✅ 🔥 AQUI ENTRA O FINANCEIRO (NOVO)
+        \App\Models\LancamentoFinanceiro::create([
+            'user_id' => auth()->id(),
+            'tipo' => 'receita',
+            'descricao' => 'Venda #' . $venda->id,
+            'valor' => $venda->total,
+            'data_vencimento' => now(),
+            'data_pagamento' => now(),
+            'status' => 'pago',
+            'venda_id' => $venda->id
+        ]);
 
         return back()->with('success', 'Venda finalizada!');
     }
 
-    // Mostrar tela de edição
-    public function edit()
+    public function destroy($id)
     {
-        $user = Auth::user();
-        return view('perfil.edit', compact('user'));
+        $venda = Venda::findOrFail($id);
+
+        if ($venda->status !== 'aberta') {
+            return back()->with('error', 'Apenas vendas abertas podem ser excluídas!');
+        }
+
+        // ✅ 🔥 (PROTEÇÃO FUTURA - financeiro)
+        \App\Models\LancamentoFinanceiro::where('venda_id', $venda->id)->delete();
+
+        $venda->itens()->delete();
+        $venda->delete();
+
+        return redirect()->route('vendas.index')->with('success', 'Venda excluída com sucesso!');
     }
 
-    // Atualizar dados
-    public function update(Request $request)
-    {
-        $user = Auth::user();
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required|email',
-            'telefone' => 'nullable',
-            'tipo' => 'required',
-            'foto' => 'nullable|image',
-            'tema' => 'required'
-        ]);
-
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->telefone = $request->telefone;
-        $user->tipo = $request->tipo;
-        $user->tema = $request->tema;
-        if ($request->hasFile('foto')) {
-            $path = $request->file('foto')->store('usuarios', 'public');
-            $user->avatar = $path;
-        }
-        if ($request->password) {
-            $user->password = bcrypt($request->password);
-        }
-        $user->save();
-        return back()->with('success', 'Atualizado com sucesso!');
-    }
 }

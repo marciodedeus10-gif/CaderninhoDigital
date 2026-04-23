@@ -6,6 +6,22 @@
 
     <h2 class="mb-4">Dashboard</h2>
 
+    @if($produtosEstoqueBaixo->count() > 0)
+    <div class="alert alert-danger shadow-sm border-0 border-start border-danger border-4">
+        <h5 class="fw-bold"><i class="fas fa-exclamation-triangle"></i> Atenção: Estoque Baixo!</h5>
+        <p class="mb-0">Você possui <strong>{{ $produtosEstoqueBaixo->count() }}</strong> produtos que atingiram ou estão abaixo do estoque mínimo. Recomendamos fazer um Pedido de Compra.</p>
+        <hr>
+        <ul class="mb-0">
+            @foreach($produtosEstoqueBaixo->take(5) as $prod)
+                <li>{{ $prod->nome }} - Restam apenas <strong>{{ $prod->estoque }}</strong> {{ $prod->unidade_medida }}</li>
+            @endforeach
+            @if($produtosEstoqueBaixo->count() > 5)
+                <li><em>E mais {{ $produtosEstoqueBaixo->count() - 5 }} outros produtos...</em></li>
+            @endif
+        </ul>
+    </div>
+    @endif
+
     <div class="row">
 
         <div class="col-md-3">
@@ -20,8 +36,8 @@
         <div class="col-md-3">
             <div class="card text-white bg-success mb-3 shadow-sm">
                 <div class="card-body text-center">
-                    <h6 class="card-title text-uppercase opacity-75">Total em Vendas</h6>
-                    <h2 class="fw-bold">R$ {{ number_format($totalVendas, 2, ',', '.') }}</h2>
+                    <h6 class="card-title text-uppercase opacity-75">Saldo de Caixa (Mês)</h6>
+                    <h2 class="fw-bold">R$ {{ number_format($saldoCaixa, 2, ',', '.') }}</h2>
                 </div>
             </div>
         </div>

@@ -23,7 +23,14 @@
                     <label class="form-label small fw-bold text-muted">Nome do Cliente</label>
                     <div class="input-group input-group-sm">
                         <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
-                        <input type="text" name="nome" class="form-control border-start-0" placeholder="Ex: João Silva" value="{{ request('nome') }}">
+                        <input type="text" name="nome" list="clientes-datalist" class="form-control border-start-0" placeholder="Ex: João Silva" value="{{ request('nome') }}" autocomplete="off">
+                        <datalist id="clientes-datalist">
+                            @if(isset($nomesClientes))
+                                @foreach ($nomesClientes as $nomeCliente)
+                                    <option value="{{ $nomeCliente }}"></option>
+                                @endforeach
+                            @endif
+                        </datalist>
                     </div>
                 </div>
 

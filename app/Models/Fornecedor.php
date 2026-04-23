@@ -5,27 +5,25 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\BelongsToUser;
 
-class Cliente extends Model
+class Fornecedor extends Model
 {
     use BelongsToUser;
+
+    protected $table = 'fornecedores';
+
     protected $fillable = [
+        'user_id',
         'nome',
+        'cnpj_cpf',
         'telefone',
         'email',
         'endereco',
-        'bairro',
-        'cidade',
-        'estado',
-        'cep',
-        'numero',
-        'cpf_cnpj',
         'observacoes',
         'ativo'
     ];
 
-    public function vendas()
+    public function compras()
     {
-        return $this->hasMany(Venda::class);
+        return $this->hasMany(Compra::class);
     }
-
 }

@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'foto',
         'avatar',
     ];
 
@@ -46,6 +47,17 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function getAvatarAttribute(): ?string
+    {
+        return $this->attributes['foto'] ?? null;
+    }
+
+    public function setAvatarAttribute(?string $value): void
+    {
+        $this->attributes['foto'] = $value;
+    }
+
     public function vendas()
     {
         return $this->hasMany(Venda::class);

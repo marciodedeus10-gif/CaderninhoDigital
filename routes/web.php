@@ -11,6 +11,8 @@ use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\QuemSomosController;
 use App\Http\Controllers\OportunidadeController;
+use App\Http\Controllers\FornecedorController;
+use App\Http\Controllers\CompraController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 
@@ -66,8 +68,11 @@ Route::middleware('auth')->group(function () {
 
     // Resources
     Route::resource('produtos', ProdutoController::class);
+    Route::get('/produtos/{produto}/estoque', [ProdutoController::class, 'estoque'])->name('produtos.estoque');
+    Route::post('/produtos/{produto}/estoque', [ProdutoController::class, 'adicionarMovimentacao'])->name('produtos.adicionarMovimentacao');
     Route::resource('servicos', ServicoController::class);
     Route::resource('clientes', ClienteController::class);
+    Route::resource('fornecedores', FornecedorController::class)->parameters(['fornecedores' => 'fornecedore']);
     Route::resource('contatos', ContatoController::class);
     Route::resource('oportunidades', OportunidadeController::class);
 
@@ -88,5 +93,15 @@ Route::middleware('auth')->group(function () {
     Route::put('/vendas/{id}/finalizar', [VendaController::class, 'finalizar'])->name('vendas.finalizar');
     Route::delete('/vendas/item/{id}', [VendaController::class, 'removeItem'])->name('vendas.removeItem');
     Route::put('/vendas/item/{id}', [VendaController::class, 'updateItem'])->name('vendas.updateItem');
+
+    // Compras
+    Route::resource('compras', CompraController::class);
+    Route::post('/compras/{compra}/item', [CompraController::class, 'addItem'])->name('compras.addItem');
+    Route::delete('/compras/item/{item}', [CompraController::class, 'removeItem'])->name('compras.removeItem');
+    Route::post('/compras/{compra}/receber', [CompraController::class, 'receber'])->name('compras.receber');
+
+    // Financeiro
+    Route::resource('financeiro', \App\Http\Controllers\FinanceiroController::class);
+    Route::post('/financeiro/{id}/baixa', [\App\Http\Controllers\FinanceiroController::class, 'darBaixa'])->name('financeiro.baixa');
 
 });
