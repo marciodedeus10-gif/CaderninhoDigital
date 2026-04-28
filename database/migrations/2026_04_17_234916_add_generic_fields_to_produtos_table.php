@@ -12,10 +12,18 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('produtos', function (Blueprint $table) {
-            $table->string('codigo_sku')->nullable()->after('descricao');
-            $table->integer('estoque')->default(0)->after('codigo_sku');
-            $table->string('unidade_medida')->default('Un')->after('estoque');
-            $table->decimal('preco_custo', 10, 2)->nullable()->after('preco');
+            if (!Schema::hasColumn('produtos', 'codigo_sku')) {
+                $table->string('codigo_sku')->nullable()->after('descricao');
+            }
+            if (!Schema::hasColumn('produtos', 'estoque')) {
+                $table->integer('estoque')->default(0)->after('codigo_sku');
+            }
+            if (!Schema::hasColumn('produtos', 'unidade_medida')) {
+                $table->string('unidade_medida')->default('Un')->after('estoque');
+            }
+            if (!Schema::hasColumn('produtos', 'preco_custo')) {
+                $table->decimal('preco_custo', 10, 2)->nullable()->after('preco');
+            }
         });
     }
 

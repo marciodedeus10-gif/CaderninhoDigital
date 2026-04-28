@@ -6,11 +6,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -61,5 +62,48 @@ class User extends Authenticatable
     public function vendas()
     {
         return $this->hasMany(Venda::class);
+    }
+
+    public function assinatura()
+    {
+        return $this->hasOne(Assinatura::class);
+    }
+
+    public function plano()
+    {
+        return $this->hasOneThrough(Plano::class, Assinatura::class, 'user_id', 'id', 'id', 'plano_id');
+    }
+
+    public function temAssinaturaAtiva()
+    {
+        return $this->assinatura && $this->assinatura->estaAtiva();
+    }
+
+    public function podeAcessarRecurso($recurso)
+    {
+        if (!$this->temAssinaturaAtiva()) {
+            return false;
+        }
+
+        return $this->plano->permiteRecurso($recurso);
+    }
+
+    public function getLimite($chave)
+    {
+        if (!$this->temAssinaturaAtiva()) {
+            return 0;
+        }
+
+        return $this->plano->getLimite($chave);
+    }
+
+    public function podeCriarUsuario()
+    {
+        if (!$this->temAssinaturaAtiva()) {
+            return false;
+        }
+
+        $usuariosAtuais = User::where('user_id', $this->id)->count();
+        return $usuariosAtuais < $this->plano->max_usuarios;
     }
 }

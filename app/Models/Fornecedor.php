@@ -9,17 +9,10 @@ class Fornecedor extends Model
 {
     use BelongsToUser;
 
-    protected $table = 'fornecedores';
-
-    protected $fillable = [
-        'user_id',
-        'nome',
-        'cnpj_cpf',
-        'telefone',
-        'email',
-        'endereco',
-        'observacoes',
-        'ativo'
+    protected $casts = [
+        'data_cadastro' => 'date',
+        'valor_minimo' => 'decimal:2',
+        'ativo' => 'boolean'
     ];
 
     public function compras()

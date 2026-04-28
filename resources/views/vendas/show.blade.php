@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('header_styles')
+<link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
+@endsection
+
 @section('content')
     <div class="container mt-4">
 
@@ -554,6 +558,33 @@
                 });
             }
 
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar Tom-Select para produtos
+            new TomSelect("#produtoSelect", {
+                create: false,
+                sortField: {
+                    field: "text",
+                    direction: "asc"
+                },
+                placeholder: "Digite para buscar um produto...",
+                noResultsText: "Nenhum produto encontrado"
+            });
+
+            // Inicializar Tom-Select para serviços
+            new TomSelect("#servicoSelect", {
+                create: false,
+                sortField: {
+                    field: "text",
+                    direction: "asc"
+                },
+                placeholder: "Digite para buscar um serviço...",
+                noResultsText: "Nenhum serviço encontrado"
+            });
         });
     </script>
 @endsection

@@ -27,4 +27,9 @@ class Produto extends Model
     {
         return $this->hasMany(Venda::class);
     }
+
+    public function fichaTecnicas()
+    {
+        return $this->hasMany(FichaTecnica::class);
+    }
 }

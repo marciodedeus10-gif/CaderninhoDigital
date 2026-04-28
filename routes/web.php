@@ -13,8 +13,9 @@ use App\Http\Controllers\QuemSomosController;
 use App\Http\Controllers\OportunidadeController;
 use App\Http\Controllers\FornecedorController;
 use App\Http\Controllers\CompraController;
-use App\Http\Controllers\Auth\ForgotPasswordController;
-use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\MateriaPrimaController;
+use App\Http\Controllers\UsuarioController;
+use App\Http\Controllers\AssinaturaController;
 
 
 // ============================================================
@@ -63,18 +64,18 @@ Route::post('/resetar-senha', [ResetPasswordController::class, 'reset'])->name('
 Route::middleware('auth')->group(function () {
 
     // Dashboard
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/dashboard/produtos-mais-vendidos', [DashboardController::class, 'produtosMaisVendidos'])->name('dashboard.produtos');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('plano:dashboard_basico');
+    Route::get('/dashboard/produtos-mais-vendidos', [DashboardController::class, 'produtosMaisVendidos'])->name('dashboard.produtos')->middleware('plano:dashboard_basico');
 
     // Resources
-    Route::resource('produtos', ProdutoController::class);
-    Route::get('/produtos/{produto}/estoque', [ProdutoController::class, 'estoque'])->name('produtos.estoque');
-    Route::post('/produtos/{produto}/estoque', [ProdutoController::class, 'adicionarMovimentacao'])->name('produtos.adicionarMovimentacao');
-    Route::resource('servicos', ServicoController::class);
-    Route::resource('clientes', ClienteController::class);
-    Route::resource('fornecedores', FornecedorController::class)->parameters(['fornecedores' => 'fornecedore']);
-    Route::resource('contatos', ContatoController::class);
-    Route::resource('oportunidades', OportunidadeController::class);
+    Route::resource('produtos', ProdutoController::class)->middleware('plano:produtos');
+    Route::get('/produtos/{produto}/estoque', [ProdutoController::class, 'estoque'])->name('produtos.estoque')->middleware('plano:estoque');
+    Route::post('/produtos/{produto}/estoque', [ProdutoController::class, 'adicionarMovimentacao'])->name('produtos.adicionarMovimentacao')->middleware('plano:estoque');
+    Route::resource('servicos', ServicoController::class)->middleware('plano:servicos');
+    Route::resource('clientes', ClienteController::class)->middleware('plano:clientes');
+    Route::resource('fornecedores', FornecedorController::class)->parameters(['fornecedores' => 'fornecedore'])->middleware('plano:compras');
+    Route::resource('contatos', ContatoController::class)->middleware('plano:clientes');
+    Route::resource('oportunidades', OportunidadeController::class)->middleware('plano:vendas');
 
     // Logout
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -103,5 +104,22 @@ Route::middleware('auth')->group(function () {
     // Financeiro
     Route::resource('financeiro', \App\Http\Controllers\FinanceiroController::class);
     Route::post('/financeiro/{id}/baixa', [\App\Http\Controllers\FinanceiroController::class, 'darBaixa'])->name('financeiro.baixa');
+
+// Matéria Prima e Ficha Técnica
+    Route::resource('materia_primas', MateriaPrimaController::class);
+    // Rotas de gerenciamento de estoque de matéria-prima
+    Route::get('/materia_primas/{materia_prima}/add-stock', [MateriaPrimaController::class, 'addStockForm'])->name('materia_primas.add_stock_form');
+    Route::post('/materia_primas/{materia_prima}/add-stock', [MateriaPrimaController::class, 'addStock'])->name('materia_primas.add_stock');
+    Route::post('/produtos/{produto}/ficha-tecnica', [\App\Http\Controllers\FichaTecnicaController::class, 'storeProduto'])->name('ficha.produto.store');
+    Route::post('/servicos/{servico}/ficha-tecnica', [\App\Http\Controllers\FichaTecnicaController::class, 'storeServico'])->name('ficha.servico.store');
+    Route::delete('/ficha-tecnica/{id}', [\App\Http\Controllers\FichaTecnicaController::class, 'destroy'])->name('ficha.destroy');
+
+    // Assinaturas e Planos
+    Route::resource('assinaturas', AssinaturaController::class)->except(['show', 'edit', 'update', 'destroy']);
+    Route::post('/assinaturas/cancelar', [AssinaturaController::class, 'cancelar'])->name('assinaturas.cancelar');
+    Route::post('/assinaturas/upgrade', [AssinaturaController::class, 'upgrade'])->name('assinaturas.upgrade');
+
+    // Gerenciamento de Usuários (para administradores)
+    Route::resource('usuarios', UsuarioController::class)->middleware('permission:ver_usuarios');
 
 });

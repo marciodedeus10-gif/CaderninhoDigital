@@ -588,6 +588,14 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a href="{{ route('materia_primas.index') }}"
+                           class="nav-link-item {{ request()->routeIs('materia_primas.*') ? 'active' : '' }}"
+                           data-tooltip="Matérias Primas">
+                            <i class="bi bi-layers nav-icon"></i>
+                            <span class="nav-label">Matérias Primas</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a href="{{ route('fornecedores.index') }}"
                            class="nav-link-item {{ request()->routeIs('fornecedores.*') ? 'active' : '' }}"
                            data-tooltip="Fornecedores">

@@ -12,7 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('produtos', function (Blueprint $table) {
-            $table->integer('estoque_minimo')->default(0)->after('estoque');
+            if (!Schema::hasColumn('produtos', 'estoque_minimo')) {
+                $table->integer('estoque_minimo')->default(0)->after('estoque');
+            }
         });
     }
 

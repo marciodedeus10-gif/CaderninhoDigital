@@ -41,7 +41,9 @@ class ProdutoController extends Controller
 
     public function edit(Produto $produto)
     {
-        return view('produtos.edit', compact('produto'));
+        $produto->load('fichaTecnicas.materiaPrima');
+        $materiaPrimas = \App\Models\MateriaPrima::where('ativo', true)->orderBy('created_at', 'desc')->get();
+        return view('produtos.edit', compact('produto', 'materiaPrimas'));
     }
 
     public function update(Request $request, Produto $produto)

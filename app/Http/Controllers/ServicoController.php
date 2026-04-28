@@ -22,7 +22,9 @@ class ServicoController extends Controller
     {
         $request->validate([
             'nome' => 'required|string|max:255',
-            'preco' => 'required|numeric|min:0'
+            'preco' => 'required|numeric|min:0',
+            'categoria' => 'nullable|string|max:255',
+            'validade_dias' => 'nullable|integer|min:0',
         ]);
 
         Servico::create($request->all());
@@ -38,14 +40,18 @@ class ServicoController extends Controller
 
     public function edit(Servico $servico)
     {
-        return view('servicos.edit', compact('servico'));
+        $servico->load('fichaTecnicas.materiaPrima');
+        $materiaPrimas = \App\Models\MateriaPrima::where('ativo', true)->orderBy('created_at', 'desc')->get();
+        return view('servicos.edit', compact('servico', 'materiaPrimas'));
     }
 
     public function update(Request $request, Servico $servico)
     {
         $request->validate([
             'nome' => 'required|string|max:255',
-            'preco' => 'required|numeric|min:0'
+            'preco' => 'required|numeric|min:0',
+            'categoria' => 'nullable|string|max:255',
+            'validade_dias' => 'nullable|integer|min:0',
         ]);
 
         $servico->update($request->all());

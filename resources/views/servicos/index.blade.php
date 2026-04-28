@@ -33,32 +33,20 @@
                 @foreach ($servicos as $servico)
                     <tr>
                         <td>{{ $servico->nome }}</td>
-                        <td>{{ $servico->preco }}</td>
-
-
-
                         <td>R$ {{ number_format($servico->preco, 2, ',', '.') }}</td>
                         <td>{{ $servico->categoria }}</td>
                         <td>{{ $servico->validade_dias }} dias</td>
                         <td>
-
-                            <form action="{{ route('servicos.destroy', $servico->id) }}" method="POST">
+                            <form action="{{ route('servicos.destroy', $servico->id) }}" method="POST" onsubmit="return confirm('Remover item?')">
                                 @csrf
                                 @method('DELETE')
-
-
-                                <button class="btn btn-sm btn-danger" onclick="return confirm('Remover item?')">
-                                    🗑️
-                                </button>
-
+                                <button class="btn btn-sm btn-danger">🗑️</button>
+                            </form>
+                        </td>
                         <td>
-                            <!-- BOTÃO EDITAR -->
                             <a href="{{ route('servicos.edit', $servico->id) }}" class="btn btn-primary btn-sm">
                                 Editar
                             </a>
-                        </td>
-
-                        </form>
                         </td>
                     </tr>
                 @endforeach

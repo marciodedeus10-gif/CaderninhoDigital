@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Compra;
 use App\Models\Fornecedor;
 use App\Models\Produto;
+use App\Models\MateriaPrima;
 use App\Models\ItemCompra;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -43,9 +44,10 @@ class CompraController extends Controller
 
     public function show(Compra $compra)
     {
-        $compra->load(['itens.produto', 'fornecedor']);
+        $compra->load(['itens.produto', 'itens.materiaPrima', 'fornecedor']);
         $produtos = Produto::all();
-        return view('compras.show', compact('compra', 'produtos'));
+        $materiaPrimas = MateriaPrima::all();
+        return view('compras.show', compact('compra', 'produtos', 'materiaPrimas'));
     }
 
     public function addItem(Request $request, Compra $compra)
@@ -55,14 +57,18 @@ class CompraController extends Controller
         }
 
         $request->validate([
-            'produto_id' => 'required|exists:produtos,id',
+            'tipo_item' => 'required|in:produto,materia_prima',
+            'produto_id' => 'required_if:tipo_item,produto|exists:produtos,id',
+            'materia_prima_id' => 'required_if:tipo_item,materia_prima|exists:materia_primas,id',
             'quantidade' => 'required|integer|min:1',
             'preco_unitario' => 'required|numeric|min:0'
         ]);
 
         ItemCompra::create([
             'compra_id' => $compra->id,
-            'produto_id' => $request->produto_id,
+            'produto_id' => $request->tipo_item === 'produto' ? $request->produto_id : null,
+            'materia_prima_id' => $request->tipo_item === 'materia_prima' ? $request->materia_prima_id : null,
+            'tipo_item' => $request->tipo_item,
             'quantidade' => $request->quantidade,
             'preco_unitario' => $request->preco_unitario,
             'subtotal' => $request->quantidade * $request->preco_unitario
@@ -99,27 +105,38 @@ class CompraController extends Controller
         return back()->with('error', 'Apenas pedidos pendentes podem ser recebidos.');
     }
 
+    $compra = $compra->load(['itens.produto', 'itens.materiaPrima']);
+
     if ($compra->itens->count() == 0) {
         return back()->with('error', 'O pedido precisa ter itens para ser recebido.');
     }
 
     // Dar entrada no estoque e registrar histórico
     foreach ($compra->itens as $item) {
-        $produto = $item->produto;
-        
-        // Incrementa estoque
-        $produto->increment('estoque', $item->quantidade);
+        if ($item->tipo_item === 'produto') {
+            $produto = $item->produto;
+            
+            // Incrementa estoque
+            $produto->increment('estoque', $item->quantidade);
 
-        // Atualizar preço de custo
-        $produto->update(['preco_custo' => $item->preco_unitario]);
+            // Atualizar preço de custo
+            $produto->update(['preco_custo' => $item->preco_unitario]);
 
-        // Histórico
-        \App\Models\MovimentacaoEstoque::create([
-            'produto_id' => $produto->id,
-            'tipo' => 'entrada',
-            'quantidade' => $item->quantidade,
-            'observacao' => "Compra #" . $compra->id
-        ]);
+            // Histórico
+            \App\Models\MovimentacaoEstoque::create([
+                'produto_id' => $produto->id,
+                'tipo' => 'entrada',
+                'quantidade' => $item->quantidade,
+                'observacao' => "Compra #" . $compra->id
+            ]);
+        } elseif ($item->tipo_item === 'materia_prima') {
+            $materiaPrima = $item->materiaPrima;
+            
+            // Incrementa estoque
+            $materiaPrima->increment('estoque_atual', $item->quantidade);
+
+            // Histórico - talvez criar uma tabela para movimentações de matéria prima, mas por enquanto, não
+        }
     }
 
     $compra->status = 'recebido';

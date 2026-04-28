@@ -13,7 +13,7 @@
         <hr>
         <ul class="mb-0">
             @foreach($produtosEstoqueBaixo->take(5) as $prod)
-                <li>{{ $prod->nome }} - Restam apenas <strong>{{ $prod->estoque }}</strong> {{ $prod->unidade_medida }}</li>
+                <li>{{ $prod->nome }} - Restam apenas <strong>{{ number_format($prod->estoque, $prod->unidade_medida === 'UN' ? 0 : 2, ',', '.') }} {{ $prod->unidade_medida }}</strong></li>
             @endforeach
             @if($produtosEstoqueBaixo->count() > 5)
                 <li><em>E mais {{ $produtosEstoqueBaixo->count() - 5 }} outros produtos...</em></li>

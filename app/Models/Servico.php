@@ -16,4 +16,9 @@ class Servico extends Model
         'validade_dias',
         'ativo'
     ];
+
+    public function fichaTecnicas()
+    {
+        return $this->hasMany(FichaTecnica::class);
+    }
 }

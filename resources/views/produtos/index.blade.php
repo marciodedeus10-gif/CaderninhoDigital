@@ -36,9 +36,9 @@
                 <td>R$ {{ number_format($produto->preco, 2, ',', '.') }}</td>
                 <td>
                     @if($produto->estoque <= 5)
-                        <span class="badge bg-danger">{{ $produto->estoque }} {{ $produto->unidade_medida }}</span>
+                        <span class="badge bg-danger">{{ number_format($produto->estoque, $produto->unidade_medida === 'UN' ? 0 : 2, ',', '.') }} {{ $produto->unidade_medida }}</span>
                     @else
-                        <span class="badge bg-success">{{ $produto->estoque }} {{ $produto->unidade_medida }}</span>
+                        <span class="badge bg-success">{{ number_format($produto->estoque, $produto->unidade_medida === 'UN' ? 0 : 2, ',', '.') }} {{ $produto->unidade_medida }}</span>
                     @endif
                 </td>
                 <td>{{ $produto->categoria }}</td>

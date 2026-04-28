@@ -258,13 +258,15 @@ class VendaController extends Controller
 
     public function finalizar($id)
     {
-        $venda = Venda::with('itens')->findOrFail($id);
+        $venda = Venda::with('itens.produto.fichaTecnicas', 'itens.servico.fichaTecnicas')->findOrFail($id);
 
         if ($venda->itens->count() == 0) {
             return back()->with('error', 'Adicione itens antes de finalizar!');
         }
 
-        // Baixa automática de estoque
+        $materiaPrimaDeductions = [];
+
+        // 1. Validar estoques
         foreach ($venda->itens as $item) {
             if ($item->produto_id) {
                 $produto = $item->produto;
@@ -272,7 +274,37 @@ class VendaController extends Controller
                     return back()->with('error', "O produto {$produto->nome} não tem estoque suficiente para finalizar a venda!");
                 }
 
-                // Deduzir estoque
+                foreach ($produto->fichaTecnicas as $ficha) {
+                    $qtdNecessaria = $ficha->quantidade * $item->quantidade;
+                    $mpId = $ficha->materia_prima_id;
+                    $materiaPrimaDeductions[$mpId] = ($materiaPrimaDeductions[$mpId] ?? 0) + $qtdNecessaria;
+                }
+            }
+
+            if ($item->servico_id) {
+                $servico = $item->servico;
+                foreach ($servico->fichaTecnicas as $ficha) {
+                    $qtdNecessaria = $ficha->quantidade * $item->quantidade;
+                    $mpId = $ficha->materia_prima_id;
+                    $materiaPrimaDeductions[$mpId] = ($materiaPrimaDeductions[$mpId] ?? 0) + $qtdNecessaria;
+                }
+            }
+        }
+
+        // Valida Matérias Primas
+        foreach ($materiaPrimaDeductions as $mpId => $totalGasto) {
+            $mp = \App\Models\MateriaPrima::find($mpId);
+            if ($mp && $mp->estoque_atual < $totalGasto) {
+                return back()->with('error', "A matéria prima '{$mp->nome}' não tem estoque suficiente! Necessário: " . number_format($totalGasto, 3, ',', '.') . " {$mp->unidade_medida}. Estoque atual: " . number_format($mp->estoque_atual, 3, ',', '.') . ".");
+            }
+        }
+
+        // 2. Efetuar as deduções
+        foreach ($venda->itens as $item) {
+            if ($item->produto_id) {
+                $produto = $item->produto;
+                
+                // Deduzir estoque do produto
                 $produto->decrement('estoque', $item->quantidade);
 
                 // Histórico de Saída
@@ -282,6 +314,14 @@ class VendaController extends Controller
                     'quantidade' => $item->quantidade,
                     'observacao' => "Venda #" . $venda->id
                 ]);
+            }
+        }
+
+        // Deduzir estoque das matérias primas
+        foreach ($materiaPrimaDeductions as $mpId => $totalGasto) {
+            $mp = \App\Models\MateriaPrima::find($mpId);
+            if ($mp) {
+                $mp->decrement('estoque_atual', $totalGasto);
             }
         }
 
