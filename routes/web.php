@@ -122,4 +122,12 @@ Route::middleware('auth')->group(function () {
     // Gerenciamento de Usuários (para administradores)
     Route::resource('usuarios', UsuarioController::class)->middleware('permission:ver_usuarios');
 
+
+Route::get('/ouro', function () {
+    return "Área Ouro";
+})->middleware('plano:ouro');
+
+Route::get('/prata', function () {
+    return "Área Prata ou Ouro";
+})->middleware('plano:prata,ouro');
 });
