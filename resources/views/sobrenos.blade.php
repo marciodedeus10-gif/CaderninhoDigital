@@ -1,0 +1,740 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Sobre o Caderninho Digital — Gestão com Tecnologia</title>
+    <meta name="description"
+        content="Caderninho Digital: plataforma para gestão e monitoramento de vendas. Praticidade para o seu negócio e controle total das suas finanças.">
+
+    <style>
+        :root {
+            --bg: #fbfbfd;
+            --card: #ffffff;
+            --primary: #8b5cf6;
+            --primary-600: #7c3aed;
+            --muted: #6b7280;
+            --accent: #06b6d4;
+            --radius: 14px;
+            --container: 1100px;
+            --glass: rgb(255, 255, 255);
+            --primary-1: #4364f7;
+            --primary-2: #6fb1fc;
+            --primary-3: #3f51b5;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            margin: 0;
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+            background: linear-gradient(180deg, var(--bg), #f2f4f8);
+            color: #0f172a;
+            line-height: 1.45;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            max-width: var(--container);
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* ======================= HEADER / NAVBAR ======================= */
+        .site-header {
+
+            width: 100%;
+            padding: 10px 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(45deg, #4364f7, #6fb1fc, #3f51b5);
+            color: white;
+            height: 90px;
+            position: relative;
+            z-index: 2000;
+
+        }
+
+        .header-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .brand .logo img {
+
+            height: 190px;
+            width: auto;
+        }
+
+
+        nav {
+            display: flex;
+        }
+
+        nav ul {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            align-items: center;
+        }
+
+        nav a {
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        nav a:hover {
+            opacity: 0.8;
+        }
+
+        /* ======================= HAMBURGER ======================= */
+        .hamburger {
+            display: none;
+            /* shown in mobile via media queries */
+            flex-direction: column;
+            gap: 5px;
+            width: 35px;
+            height: 32px;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            z-index: 4000;
+            position: relative;
+        }
+
+        .hamburger span {
+            width: 100%;
+            height: 4px;
+            background: white;
+            border-radius: 4px;
+            transition: 0.3s;
+            display: block;
+        }
+
+        .hamburger.ativo span:nth-child(1) {
+            transform: rotate(45deg) translate(6px, 6px);
+        }
+
+        .hamburger.ativo span:nth-child(2) {
+            opacity: 0;
+            transform: translateX(-10px);
+        }
+
+        .hamburger.ativo span:nth-child(3) {
+            transform: rotate(-45deg) translate(6px, -6px);
+        }
+
+        /* ======================= MENU MOBILE ======================= */
+        .menu-mobile {
+            position: fixed;
+            top: 0;
+            right: -260px;
+            width: 240px;
+            height: 100%;
+            background: rgba(63, 81, 181, 0.95);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            transition: right .35s ease;
+            z-index: 3000;
+            border-radius: 8px 0 0 8px;
+        }
+
+        .logo img {
+            height: 190px;
+            width: auto;
+        }
+
+        .menu-mobile a {
+            font-size: 19px;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            padding: 10px 0;
+            width: 100%;
+            text-align: center;
+            border-radius: 8px;
+            transition: .3s;
+            opacity: 0;
+            transform: translateX(50px);
+        }
+
+        .menu-mobile.ativo {
+            right: 0;
+        }
+
+        .menu-mobile.ativo a {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .menu-mobile a:hover {
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        /* delays */
+        .menu-mobile.ativo a:nth-child(1) {
+            transition-delay: 0.08s;
+        }
+
+        .menu-mobile.ativo a:nth-child(2) {
+            transition-delay: 0.15s;
+        }
+
+        .menu-mobile.ativo a:nth-child(3) {
+            transition-delay: 0.22s;
+        }
+
+        .menu-mobile.ativo a:nth-child(4) {
+            transition-delay: 0.29s;
+        }
+
+        .menu-mobile.ativo a:nth-child(5) {
+            transition-delay: 0.36s;
+        }
+
+        .menu-mobile.ativo a:nth-child(6) {
+            transition-delay: 0.43s;
+        }
+
+        /* ======================= OVERLAY ======================= */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            z-index: 2500;
+        }
+
+        .overlay.ativo {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* ======================= HERO ======================= */
+        .hero {
+            padding: 140px 0 60px;
+        }
+
+        .hero-inner {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .hero-text {
+            flex: 1;
+            min-width: 260px;
+        }
+
+        .hero-text h1 {
+            font-size: clamp(1.6rem, 3vw, 2.4rem);
+            margin-bottom: 10px;
+        }
+
+        .hero-text p {
+            color: var(--muted);
+            margin-bottom: 15px;
+        }
+
+        .cta-row {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 18px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+        }
+
+        .primary {
+            background: var(--primary);
+            color: #fff;
+            box-shadow: 0 6px 18px rgba(124, 58, 237, 0.12);
+        }
+
+        .ghost {
+            background: transparent;
+            border: 1px solid rgba(15, 23, 42, 0.06);
+            color: #0f172a;
+        }
+
+        .hero-card {
+            width: 320px;
+            background: linear-gradient(180deg, var(--card), #fff);
+            border-radius: 16px;
+            padding: 1rem;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+        }
+
+        .card-preview {
+            font-size: .95rem;
+        }
+
+        .mock-header {
+            font-weight: 700;
+            margin-bottom: .5rem;
+        }
+
+        .mini-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 1rem;
+        }
+
+        .mini-list li {
+            padding: .25rem 0;
+            border-bottom: 1px dashed rgba(0, 0, 0, 0.04);
+        }
+
+        .progress {
+            height: 8px;
+            background: #f1f5f9;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .progress>div {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--primary));
+        }
+
+        /* ======================= SECTIONS ======================= */
+        .section {
+            padding: 2.5rem 0;
+        }
+
+        .about .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .check-list {
+            list-style: disc;
+            margin-left: 1.1rem;
+        }
+
+        .features .three-col {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.25rem;
+        }
+
+        .feature {
+            background: var(--card);
+            padding: 1rem;
+            border-radius: 12px;
+            box-shadow: 0 6px 18px rgba(15, 23, 42, 0.03);
+        }
+
+        .mission {
+            background: linear-gradient(180deg, rgba(99, 102, 241, 0.04), transparent);
+        }
+
+        .mission-inner {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .mission-quote blockquote {
+            font-style: italic;
+            color: var(--muted);
+            margin: 0;
+        }
+
+        .contact-form {
+            max-width: 720px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: .75rem;
+            margin-bottom: .75rem;
+        }
+
+        .form-row input {
+            flex: 1;
+            padding: .7rem;
+            border-radius: 10px;
+            border: 1px solid rgba(15, 23, 42, 0.06);
+        }
+
+        textarea {
+            width: 100%;
+            padding: .7rem;
+            border-radius: 10px;
+            border: 1px solid rgba(15, 23, 42, 0.06);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: .5rem;
+            margin-top: .6rem;
+            align-items: center;
+        }
+
+        .form-msg {
+            margin-top: .6rem;
+            color: var(--muted);
+        }
+
+        .site-footer {
+            padding: 1.2rem 0;
+            background: transparent;
+            border-top: 1px solid rgba(15, 23, 42, 0.04);
+            text-align: center;
+        }
+
+        /* ======================= RESPONSIVIDADE ======================= */
+        @media (max-width: 900px) {
+            nav {
+                display: none;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .logo img {
+                height: 60px;
+            }
+
+            .hero-inner {
+                flex-direction: column-reverse;
+                text-align: center;
+            }
+
+            .hero-card {
+                width: 100%;
+            }
+
+            .features .three-col {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .about .two-col {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .features .three-col {
+                grid-template-columns: 1fr;
+            }
+
+            .hamburger {
+                position: absolute;
+                right: 20px;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+
+            .brand {
+                padding-left: 12px;
+            }
+        }
+
+        .brand {
+            margin-left: 0;
+            padding-left: 0 !important;
+        }
+
+
+        /* small fine tuning to avoid logo shift issues */
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            margin-left: 0;
+            padding-left: 0 !important;
+        }
+
+        .site-header .header-inner {
+            padding: 0 20px;
+        }
+        .brand {
+    padding-left: -100px !important;
+}
+
+    </style>
+</head>
+
+<body>
+    <!-- HEADER -->
+    <header class="site-header">
+        <div class="header-inner">
+
+            <a href="{{ url('/') }}" class="brand">
+                <div class="logo">
+                    <img src="{{ asset('assets/img/logo.png') }}" alt="Logo Senior Conecta">
+                </div>
+            </a>
+
+
+            <nav class="nav">
+                <ul>
+                    <li><a href="#sobre">Sobre nós</a></li>
+                    <li><a href="#funcionalidades">Funcionalidades</a></li>
+                    <li><a href="#missao">Missão</a></li>
+                    <li><a href="#contato">Contato</a></li>
+                    <li><a href="{{ route('beneficios') }}">Benefícios</a></li>
+                </ul>
+            </nav>
+
+            <button class="hamburger" id="btnHamburger" aria-label="Abrir menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- MENU MOBILE -->
+    <div class="menu-mobile" id="menuMobile" aria-hidden="true">
+        <a href="#sobre">Sobre nós</a>
+        <a href="#funcionalidades">Funcionalidades</a>
+        <a href="#missao">Missão</a>
+        <a href="#contato">Contato</a>
+        <a href="{{ route('beneficios') }}">Benefícios</a>
+        <a href="{{ route('login') }}" class="cad">Login</a>
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+
+    <!-- MAIN (conteúdo que você pediu) -->
+    <main>
+        <section class="hero">
+            <div class="container hero-inner">
+                <div class="hero-text">
+                    <h1>Seu negócio conectado. Tranquilidade para empreender.</h1>
+                    <p>O <strong>Caderninho Digital</strong> é uma plataforma pensada para gerenciar, registrar e facilitar
+                        o controle de vendas diário — com segurança, simplicidade e precisão.</p>
+                    <div class="cta-row">
+                        <a class="btn primary" href="#funcionalidades">Conheça as funcionalidades</a>
+                        <a class="btn ghost" href="#contato">Fale conosco</a>
+                    </div>
+                </div>
+
+                <div class="hero-card">
+                    <div class="card-preview">
+                        <div class="mock-header">Visão Geral da Empresa</div>
+                        <ul class="mini-list">
+                            <li><strong>Volume de Vendas:</strong> R$ 12.450,00</li>
+                            <li><strong>Novos Clientes:</strong> 15 este mês</li>
+                            <li><strong>Última venda:</strong> 10 minutos atrás</li>
+                        </ul>
+                        <div class="progress-row">
+                            <div>
+                                <small>Meta Mensal</small>
+                                <div class="progress" aria-hidden="true">
+                                    <div style="width:75%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="sobre" class="section about">
+            <div class="container">
+                <div class="grid two-col">
+                    <div>
+                        <h2>Sobre o Caderninho Digital</h2>
+                        <p>Desenvolvido para facilitar o controle financeiro, o Caderninho Digital reúne tecnologia, praticidade e
+                            segurança — garantindo acompanhamento completo de vendas, estoque, lembretes de cobrança e
+                            comunicação integrada.</p>
+                        <p>Nosso propósito é simples: <strong>proporcionar mais organização aos empreendedores e clareza aos
+                                resultados financeiros</strong>.</p>
+                    </div>
+                    <div>
+                        <h3>Por que escolher nossa plataforma?</h3>
+                        <ul class="check-list">
+                            <li>Foco no crescimento sustentável e lucratividade.</li>
+                            <li>Informações organizadas e acessíveis de qualquer lugar.</li>
+                            <li>Privacidade e segurança dos seus dados comerciais.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="funcionalidades" class="section features">
+            <div class="container">
+                <h2>Funcionalidades</h2>
+                <div class="grid three-col">
+                    <article class="feature">
+                        <h4>Registro de Atividades</h4>
+                        <p>Histórico completo e confiável.</p>
+                    </article>
+                    <article class="feature">
+                        <h4>Lembretes e Alarmes</h4>
+                        <p>Medicação e atividades programadas.</p>
+                    </article>
+                    <article class="feature">
+                        <h4>Comunicação Integrada</h4>
+                        <p>Troca de informações em tempo real.</p>
+                    </article>
+                    <article class="feature">
+                        <h4>Relatórios</h4>
+                        <p>Análise de padrões e evolução.</p>
+                    </article>
+                    <article class="feature">
+                        <h4>Segurança de Dados</h4>
+                        <p>Acesso apenas por pessoas autorizadas.</p>
+                    </article>
+                    <article class="feature">
+                        <h4>Interface Intuitiva</h4>
+                        <p>Acessível para todas as idades.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section id="missao" class="section mission">
+            <div class="container mission-inner">
+                <div>
+                    <h2>Nossa Missão</h2>
+                    <p>Promover cuidado, segurança e bem-estar por meio da tecnologia.</p>
+                </div>
+                <div class="mission-quote">
+                    <blockquote>"Cuidar é compartilhar responsabilidade."</blockquote>
+                </div>
+            </div>
+        </section>
+
+        <section id="contato" class="section contact">
+            <div class="container">
+                <h2>Fale conosco</h2>
+                <p>Envie sua mensagem e nossa equipe retornará.</p>
+
+                <form id="contactForm" class="contact-form" novalidate>
+                    <div class="form-row">
+                        <input type="text" id="name" name="name" placeholder="Seu nome" required>
+                        <input type="email" id="email" name="email" placeholder="E-mail" required>
+                    </div>
+                    <textarea id="message" name="message" rows="4" placeholder="Sua mensagem" required></textarea>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn primary">Enviar mensagem</button>
+                        <button type="button" id="btnReset" class="btn ghost">Limpar</button>
+                    </div>
+
+                    <p id="formMsg" class="form-msg" aria-live="polite"></p>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; <span id="year"></span> Caderninho Digital — Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- SCRIPTS -->
+    <script>
+        // Menu toggle
+        const burger = document.getElementById("btnHamburger");
+        const mobile = document.getElementById("menuMobile");
+        const overlay = document.getElementById("overlay");
+
+        function toggleMenu() {
+            const open = mobile.classList.toggle("ativo");
+            burger.classList.toggle("ativo");
+            overlay.classList.toggle("ativo");
+            mobile.setAttribute('aria-hidden', !open);
+        }
+
+        burger.addEventListener("click", toggleMenu);
+        overlay.addEventListener("click", toggleMenu);
+
+        // Close menu on link click (mobile)
+        document.querySelectorAll('.menu-mobile a').forEach(a => {
+            a.addEventListener('click', () => {
+                if (mobile.classList.contains('ativo')) toggleMenu();
+            });
+        });
+
+        // Contact form simple handler (simulação)
+        const form = document.getElementById('contactForm');
+        const formMsg = document.getElementById('formMsg');
+        const btnReset = document.getElementById('btnReset');
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = form.name.value.trim();
+            const email = form.email.value.trim();
+            const message = form.message.value.trim();
+
+            if (!name || !email || !message) {
+                formMsg.textContent = 'Por favor preencha todos os campos.';
+                return;
+            }
+
+            // Simula envio
+            formMsg.textContent = 'Enviando...';
+
+            setTimeout(() => {
+                formMsg.textContent = 'Mensagem enviada com sucesso. Obrigado!';
+                form.reset();
+            }, 800);
+        });
+
+        btnReset.addEventListener('click', () => {
+            form.reset();
+            formMsg.textContent = '';
+        });
+
+        // Atualiza ano no footer
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+</body>
+
+</html>

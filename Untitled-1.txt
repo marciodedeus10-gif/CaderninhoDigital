@@ -1,0 +1,16 @@
+Plano Autônomo (R$ 49/mês)
+├─ Até 1 usuário
+├─ Módulos básicos (Clientes, Vendas)
+└─ Sem acesso: Financeiro, Estoque avançado
+
+Plano Pequena Empresa (R$ 149/mês)
+├─ Até 4 usuários
+├─ Todos módulos
+├─ Roles: Gerente, Vendedor, Comum
+└─ Sem acesso: Relatórios avançados
+
+Plano Empresa (R$ 399/mês)
+├─ Usuários ilimitados
+├─ Todos módulos + API
+├─ Roles: Admin, Gerente Estoque, Gerente Financeiro, Vendedor, Comum
+└─ Tudo liberado + suporte prioritário
