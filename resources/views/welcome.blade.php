@@ -100,6 +100,7 @@
 <section class="planos" id="planos">
     <h2>Nossos Planos</h2>
     <div class="cards">
+<<<<<<< HEAD
     @php
         $allRecursos = array_merge(
             config('planos.recursos.basicos'),
@@ -125,11 +126,17 @@
                     </li>
                 @endforeach
             </ul>
+=======
+        <div class="card">
+            <h3>Plano Bronze</h3>
+            <p>Essencial para autônomos: controle de vendas e estoque básico.</p>
+>>>>>>> 59cdc6e74334d25cc711c95fc0b2dac517a3c838
             <button onclick="contratar('Bronze')">Assinar</button>
         </div>
         <div class="card destaque">
             <h3>Plano Prata</h3>
             <p>A escolha ideal: CRM completo, gestão de oportunidades e metas.</p>
+<<<<<<< HEAD
             <ul class="categorias">
                 @foreach($allRecursos as $recurso)
                     <li class="categoria-item">
@@ -142,11 +149,14 @@
                     </li>
                 @endforeach
             </ul>
+=======
+>>>>>>> 59cdc6e74334d25cc711c95fc0b2dac517a3c838
             <button onclick="contratar('Prata')">Assinar</button>
         </div>
         <div class="card">
             <h3>Plano Ouro</h3>
             <p>Business total: Relatórios avançados, múltiplos usuários e prioridade.</p>
+<<<<<<< HEAD
             <ul class="categorias">
                 @foreach($allRecursos as $recurso)
                     <li class="categoria-item">
@@ -159,6 +169,8 @@
                     </li>
                 @endforeach
             </ul>
+=======
+>>>>>>> 59cdc6e74334d25cc711c95fc0b2dac517a3c838
             <button onclick="contratar('Ouro')">Assinar</button>
         </div>
     </div>

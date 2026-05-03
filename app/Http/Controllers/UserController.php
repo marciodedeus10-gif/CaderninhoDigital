@@ -61,6 +61,7 @@ class UserController extends Controller
 
         return redirect()->route('perfil.edit')->with('success', 'Dados atualizados!');
     }
+<<<<<<< HEAD
 
     // Excluir conta do usuário
     public function destroy(Request $request)
@@ -81,4 +82,6 @@ class UserController extends Controller
         return redirect()->route('login')
             ->with('success', 'Conta excluída com sucesso. Até logo!');
     }
+=======
+>>>>>>> 59cdc6e74334d25cc711c95fc0b2dac517a3c838
 }

@@ -116,8 +116,11 @@ Route::middleware('auth')->group(function () {
 
     // Assinaturas e Planos
     Route::resource('assinaturas', AssinaturaController::class)->except(['show', 'edit', 'update', 'destroy']);
+<<<<<<< HEAD
     // Rota para criar assinatura gratuita do plano Bronze
     Route::post('/assinaturas/gratis', [AssinaturaController::class, 'gratis'])->name('assinaturas.gratis');
+=======
+>>>>>>> 59cdc6e74334d25cc711c95fc0b2dac517a3c838
     Route::post('/assinaturas/cancelar', [AssinaturaController::class, 'cancelar'])->name('assinaturas.cancelar');
     Route::post('/assinaturas/upgrade', [AssinaturaController::class, 'upgrade'])->name('assinaturas.upgrade');
 
