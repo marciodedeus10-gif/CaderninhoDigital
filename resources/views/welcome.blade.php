@@ -100,19 +100,65 @@
 <section class="planos" id="planos">
     <h2>Nossos Planos</h2>
     <div class="cards">
+    @php
+        $allRecursos = array_merge(
+            config('planos.recursos.basicos'),
+            config('planos.recursos.intermediarios'),
+            config('planos.recursos.avancados')
+        );
+        $bronzeRecursos = ['clientes','produtos','servicos','vendas','dashboard_basico'];
+        $prataRecursos = ['clientes','produtos','servicos','vendas','compras','estoque','financeiro','dashboard_completo','relatorios_basicos','multi_usuario'];
+        $ouroRecursos = $allRecursos; // all resources active for Ouro
+    @endphp
         <div class="card">
             <h3>Plano Bronze</h3>
             <p>Essencial para autônomos: controle de vendas e estoque básico.</p>
+            <ul class="categorias">
+                @foreach($allRecursos as $recurso)
+                    <li class="categoria-item">
+                        @if(in_array($recurso, $bronzeRecursos))
+                            <span class="check">✔</span>
+                        @else
+                            <span class="cross">✖</span>
+                        @endif
+                        {{ ucfirst(str_replace('_', ' ', $recurso)) }}
+                    </li>
+                @endforeach
+            </ul>
             <button onclick="contratar('Bronze')">Assinar</button>
         </div>
         <div class="card destaque">
             <h3>Plano Prata</h3>
             <p>A escolha ideal: CRM completo, gestão de oportunidades e metas.</p>
+            <ul class="categorias">
+                @foreach($allRecursos as $recurso)
+                    <li class="categoria-item">
+                        @if(in_array($recurso, $prataRecursos))
+                            <span class="check">✔</span>
+                        @else
+                            <span class="cross">✖</span>
+                        @endif
+                        {{ ucfirst(str_replace('_', ' ', $recurso)) }}
+                    </li>
+                @endforeach
+            </ul>
             <button onclick="contratar('Prata')">Assinar</button>
         </div>
         <div class="card">
             <h3>Plano Ouro</h3>
             <p>Business total: Relatórios avançados, múltiplos usuários e prioridade.</p>
+            <ul class="categorias">
+                @foreach($allRecursos as $recurso)
+                    <li class="categoria-item">
+                        @if(in_array($recurso, $ouroRecursos))
+                            <span class="check">✔</span>
+                        @else
+                            <span class="cross">✖</span>
+                        @endif
+                        {{ ucfirst(str_replace('_', ' ', $recurso)) }}
+                    </li>
+                @endforeach
+            </ul>
             <button onclick="contratar('Ouro')">Assinar</button>
         </div>
     </div>

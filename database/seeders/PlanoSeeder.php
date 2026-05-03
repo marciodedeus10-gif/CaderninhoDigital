@@ -16,8 +16,8 @@ class PlanoSeeder extends Seeder
             [
                 'nome' => 'Bronze',
                 'descricao' => 'Perfeito para profissionais autônomos que estão começando.',
-                'preco_mensal' => 49.90,
-                'preco_anual' => 499.00,
+                'preco_mensal' => 0.00,
+                'preco_anual' => 0.00,
                 'max_usuarios' => 1,
                 'recursos' => [
                     'clientes',

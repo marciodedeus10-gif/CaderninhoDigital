@@ -33,19 +33,14 @@
 
             <hr>
 
-            <a href="{{ route('perfil.edit') }}" class="btn btn-primary">
-                Atualizar Cadastro
-            </a>
+            <a href="{{ route('perfil.edit') }}" class="btn btn-primary mb-2">Atualizar Cadastro</a>
 
             <form action="{{ route('perfil.delete') }}" method="POST" style="margin-top:10px;">
-
                 @csrf
                 @method('DELETE')
-
-                <button class="btn btn-danger">
+                <button class="btn btn-danger" onclick="return confirm('Tem certeza que deseja excluir sua conta? Esta ação é irreversível.')">
                     Excluir Conta
                 </button>
-
             </form>
 
         </div>

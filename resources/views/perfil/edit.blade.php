@@ -53,6 +53,15 @@
 
                     <button class="btn btn-success">Salvar</button>
                 </form>
+
+        <!-- Formulário para excluir a conta -->
+        <form action="{{ route('perfil.delete') }}" method="POST" style="margin-top:15px;">
+            @csrf
+            @method('DELETE')
+            <button class="btn btn-danger" onclick="return confirm('Tem certeza que deseja excluir sua conta? Esta ação é irreversível.')">
+                Excluir Conta
+            </button>
+        </form>
             </div>
         </div>
 

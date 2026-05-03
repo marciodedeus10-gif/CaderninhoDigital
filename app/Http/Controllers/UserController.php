@@ -61,4 +61,24 @@ class UserController extends Controller
 
         return redirect()->route('perfil.edit')->with('success', 'Dados atualizados!');
     }
+
+    // Excluir conta do usuário
+    public function destroy(Request $request)
+    {
+        $user = Auth::user();
+
+        // Opcional: remover assinatura associada
+        if (method_exists($user, 'assinatura') && $user->assinatura) {
+            $user->assinatura->delete();
+        }
+
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        $user->delete();
+
+        return redirect()->route('login')
+            ->with('success', 'Conta excluída com sucesso. Até logo!');
+    }
 }

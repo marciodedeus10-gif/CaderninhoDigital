@@ -4,6 +4,12 @@
 <div class="container mx-auto px-4 py-8">
     <div class="max-w-4xl mx-auto">
         <h1 class="text-3xl font-bold text-gray-900 mb-8">Minha Assinatura</h1>
+        <form action="{{ route('assinaturas.gratis') }}" method="POST" class="mt-4">
+            @csrf
+            <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition duration-200">
+                Obter assinatura Bronze grátis
+            </button>
+        </form>
 
         @if(session('success'))
             <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
@@ -60,19 +66,9 @@
                 </div>
             </div>
         @else
-            <!-- Sem Assinatura -->
-            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-6 mb-8">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
-                        </svg>
-                    </div>
-                    <div class="ml-3">
-                        <h3 class="text-sm font-medium text-yellow-800">Assinatura Necessária</h3>
-                        <p class="text-sm text-yellow-700">Você precisa de uma assinatura ativa para usar o sistema.</p>
-                    </div>
-                </div>
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+                <strong>Assinatura expirada ou inexistente</strong>
+                <p>Renove sua assinatura para continuar usando o sistema</p>
             </div>
         @endif
 
@@ -120,18 +116,27 @@
                         </div>
 
                         @if(!$assinatura || $assinatura->plano_id != $plano->id)
-                            <form action="{{ route('assinaturas.upgrade') }}" method="POST">
-                                @csrf
-                                <input type="hidden" name="plano_id" value="{{ $plano->id }}">
-                                <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-200">
-                                    {{ $assinatura ? 'Fazer Upgrade' : 'Assinar' }}
-                                </button>
-                            </form>
-                        @else
-                            <div class="w-full bg-gray-300 text-gray-600 py-2 px-4 rounded-lg text-center">
-                                Plano Atual
-                            </div>
-                        @endif
+    @if($plano->nome == 'Bronze')
+        <form action="{{ route('assinaturas.gratis') }}" method="POST">
+            @csrf
+            <button type="submit" class="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition duration-200">
+                Assinar grátis
+            </button>
+        </form>
+    @else
+        <form action="{{ route('assinaturas.upgrade') }}" method="POST">
+            @csrf
+            <input type="hidden" name="plano_id" value="{{ $plano->id }}">
+            <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-200">
+                {{ $assinatura ? 'Fazer Upgrade' : 'Assinar' }}
+            </button>
+        </form>
+    @endif
+@else
+    <div class="w-full bg-gray-300 text-gray-600 py-2 px-4 rounded-lg text-center">
+        Plano Atual
+    </div>
+@endif
                     </div>
                 @endforeach
             </div>

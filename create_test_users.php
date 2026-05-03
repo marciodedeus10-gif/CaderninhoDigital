@@ -56,6 +56,9 @@ foreach ($testUsers as $testUser) {
     // Criar ou atualizar assinatura
     $assinatura = $user->assinatura;
     if (!$assinatura) {
+        /* Busca o plano para obter o preço */
+        $plano = Plano::find($plano_id);
+        $valorPlano = $plano ? $plano->preco_mensal : 0.00;
         Assinatura::create([
             'user_id' => $user->id,
             'plano_id' => $plano_id,
@@ -64,7 +67,7 @@ foreach ($testUsers as $testUser) {
             'data_fim' => now()->addYear(),
             'data_renovacao' => now()->addYear(),
             'periodicidade' => 'anual',
-            'valor' => 0.00
+            'valor' => $valorPlano
         ]);
         echo "  → Assinatura criada com Plano ID: {$plano_id}\n";
     } else {

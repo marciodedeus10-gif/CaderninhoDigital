@@ -96,4 +96,33 @@ class AssinaturaController extends Controller
 
         return redirect()->route('assinaturas.index')->with('success', 'Assinatura cancelada com sucesso!');
     }
+
+    // Nova funcionalidade: criar assinatura gratuita para o plano Bronze
+    public function gratis()
+    {
+        $user = Auth::user();
+        // Verificar se usuário já tem assinatura ativa
+        if ($user->temAssinaturaAtiva()) {
+            return back()->with('error', 'Você já possui uma assinatura ativa');
+        }
+        // Encontrar o plano Bronze
+        $plano = Plano::where('nome', 'Bronze')->first();
+        if (!$plano) {
+            return back()->with('error', 'Plano Bronze não encontrado');
+        }
+        // Criar assinatura gratuita (mensal)
+        Assinatura::create([
+            'user_id' => $user->id,
+            'plano_id' => $plano->id,
+            'status' => 'ativa',
+            'data_inicio' => now(),
+            'data_fim' => now()->addMonth(),
+            'data_renovacao' => now()->addMonth(),
+            'periodicidade' => 'mensal',
+            'valor' => 0.00,
+        ]);
+
+        return redirect()->route('dashboard')->with('success', 'Assinatura Bronze gratuita criada com sucesso!');
+    }
+
 }
