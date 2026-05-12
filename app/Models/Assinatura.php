@@ -22,9 +22,9 @@ class Assinatura extends Model
     ];
 
     protected $casts = [
-        'data_inicio' => 'date',
-        'data_fim' => 'date',
-        'data_renovacao' => 'date',
+        'data_inicio' => 'datetime',
+        'data_fim' => 'datetime',
+        'data_renovacao' => 'datetime',
         'valor' => 'decimal:2',
         'configuracao' => 'array'
     ];

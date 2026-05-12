@@ -96,7 +96,7 @@ class AssinaturaController extends Controller
 
         return redirect()->route('assinaturas.index')->with('success', 'Assinatura cancelada com sucesso!');
     }
-<<<<<<< HEAD
+
 
     // Nova funcionalidade: criar assinatura gratuita para o plano Bronze
     public function gratis()
@@ -125,7 +125,4 @@ class AssinaturaController extends Controller
 
         return redirect()->route('dashboard')->with('success', 'Assinatura Bronze gratuita criada com sucesso!');
     }
-
-=======
->>>>>>> 59cdc6e74334d25cc711c95fc0b2dac517a3c838
 }

@@ -53,8 +53,6 @@
 
                     <button class="btn btn-success">Salvar</button>
                 </form>
-<<<<<<< HEAD
-
         <!-- Formulário para excluir a conta -->
         <form action="{{ route('perfil.delete') }}" method="POST" style="margin-top:15px;">
             @csrf
@@ -63,8 +61,6 @@
                 Excluir Conta
             </button>
         </form>
-=======
->>>>>>> 59cdc6e74334d25cc711c95fc0b2dac517a3c838
             </div>
         </div>
 

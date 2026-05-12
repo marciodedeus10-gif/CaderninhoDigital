@@ -9,6 +9,8 @@ class Fornecedor extends Model
 {
     use BelongsToUser;
 
+    protected $table = 'fornecedores';
+
     protected $casts = [
         'data_cadastro' => 'date',
         'valor_minimo' => 'decimal:2',

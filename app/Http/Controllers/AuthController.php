@@ -48,11 +48,28 @@ class AuthController extends Controller
             'password' => 'required|min:6|confirmed'
         ]);
 
-        User::create([
+        $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password)
         ]);
+
+        // Criar a assinatura Ouro trial de 15 dias para novos usuários
+        $planoOuro = \App\Models\Plano::where('nome', 'Ouro')->first();
+        if ($planoOuro) {
+            \App\Models\Assinatura::create([
+                'user_id' => $user->id,
+                'plano_id' => $planoOuro->id,
+                'status' => 'ativa',
+                'data_inicio' => now(),
+                // 'data_fim' => now()->addDays(15),
+                // 'data_renovacao' => now()->addDays(15),
+                'data_fim' => now()->addMinutes(05),
+                'data_renovacao' => now()->addMinutes(05),
+                'periodicidade' => 'mensal', // ou trial
+                'valor' => 0.00
+            ]);
+        }
 
         return redirect()->route('login');
     }

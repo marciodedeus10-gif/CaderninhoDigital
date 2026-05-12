@@ -33,7 +33,6 @@
 
             <hr>
 
-<<<<<<< HEAD
             <a href="{{ route('perfil.edit') }}" class="btn btn-primary mb-2">Atualizar Cadastro</a>
 
             <form action="{{ route('perfil.delete') }}" method="POST" style="margin-top:10px;">
@@ -42,21 +41,6 @@
                 <button class="btn btn-danger" onclick="return confirm('Tem certeza que deseja excluir sua conta? Esta ação é irreversível.')">
                     Excluir Conta
                 </button>
-=======
-            <a href="{{ route('perfil.edit') }}" class="btn btn-primary">
-                Atualizar Cadastro
-            </a>
-
-            <form action="{{ route('perfil.delete') }}" method="POST" style="margin-top:10px;">
-
-                @csrf
-                @method('DELETE')
-
-                <button class="btn btn-danger">
-                    Excluir Conta
-                </button>
-
->>>>>>> 59cdc6e74334d25cc711c95fc0b2dac517a3c838
             </form>
 
         </div>

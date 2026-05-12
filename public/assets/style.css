@@ -282,7 +282,6 @@
     background: linear-gradient(45deg, #4364f7, #3f51b5);
 }
 
-<<<<<<< HEAD
 .categorias {
     list-style: none;
     padding: 0;
@@ -309,8 +308,6 @@
     font-weight: bold;
 }
 
-
-=======
 .card button {
     margin-top: 15px;
     padding: 10px 20px;
@@ -321,8 +318,6 @@
     border-radius: 6px;
     cursor: pointer;
 }
-
->>>>>>> 59cdc6e74334d25cc711c95fc0b2dac517a3c838
 .card button:hover {
     background: #dce3ff;
 }

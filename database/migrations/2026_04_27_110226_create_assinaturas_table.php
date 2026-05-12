@@ -16,9 +16,9 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('plano_id')->constrained()->onDelete('cascade');
             $table->enum('status', ['ativa', 'cancelada', 'suspensa', 'expirada']);
-            $table->date('data_inicio');
-            $table->date('data_fim');
-            $table->date('data_renovacao');
+            $table->dateTime('data_inicio');
+            $table->dateTime('data_fim');
+            $table->dateTime('data_renovacao');
             $table->enum('periodicidade', ['mensal', 'anual']);
             $table->decimal('valor', 10, 2);
             $table->json('configuracao')->nullable(); // configurações específicas da assinatura

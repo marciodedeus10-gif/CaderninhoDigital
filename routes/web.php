@@ -75,7 +75,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('clientes', ClienteController::class)->middleware('plano:clientes');
     Route::resource('fornecedores', FornecedorController::class)->parameters(['fornecedores' => 'fornecedore'])->middleware('plano:compras');
     Route::resource('contatos', ContatoController::class)->middleware('plano:clientes');
-    Route::resource('oportunidades', OportunidadeController::class)->middleware('plano:vendas');
+    Route::resource('oportunidades', OportunidadeController::class)->middleware('plano:dashboard_completo'); // Bronze não tem dashboard_completo
 
     // Logout
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -96,37 +96,35 @@ Route::middleware('auth')->group(function () {
     Route::put('/vendas/item/{id}', [VendaController::class, 'updateItem'])->name('vendas.updateItem');
 
     // Compras
-    Route::resource('compras', CompraController::class);
-    Route::post('/compras/{compra}/item', [CompraController::class, 'addItem'])->name('compras.addItem');
-    Route::delete('/compras/item/{item}', [CompraController::class, 'removeItem'])->name('compras.removeItem');
-    Route::post('/compras/{compra}/receber', [CompraController::class, 'receber'])->name('compras.receber');
+    Route::resource('compras', CompraController::class)->middleware('plano:compras');
+    Route::post('/compras/{compra}/item', [CompraController::class, 'addItem'])->name('compras.addItem')->middleware('plano:compras');
+    Route::delete('/compras/item/{item}', [CompraController::class, 'removeItem'])->name('compras.removeItem')->middleware('plano:compras');
+    Route::post('/compras/{compra}/receber', [CompraController::class, 'receber'])->name('compras.receber')->middleware('plano:compras');
 
     // Financeiro
-    Route::resource('financeiro', \App\Http\Controllers\FinanceiroController::class);
-    Route::post('/financeiro/{id}/baixa', [\App\Http\Controllers\FinanceiroController::class, 'darBaixa'])->name('financeiro.baixa');
+    Route::resource('financeiro', \App\Http\Controllers\FinanceiroController::class)->middleware('plano:financeiro');
+    Route::post('/financeiro/{id}/baixa', [\App\Http\Controllers\FinanceiroController::class, 'darBaixa'])->name('financeiro.baixa')->middleware('plano:financeiro');
 
 // Matéria Prima e Ficha Técnica
-    Route::resource('materia_primas', MateriaPrimaController::class);
+    Route::resource('materia_primas', MateriaPrimaController::class)->middleware('plano:estoque');
     // Rotas de gerenciamento de estoque de matéria-prima
-    Route::get('/materia_primas/{materia_prima}/add-stock', [MateriaPrimaController::class, 'addStockForm'])->name('materia_primas.add_stock_form');
-    Route::post('/materia_primas/{materia_prima}/add-stock', [MateriaPrimaController::class, 'addStock'])->name('materia_primas.add_stock');
-    Route::post('/produtos/{produto}/ficha-tecnica', [\App\Http\Controllers\FichaTecnicaController::class, 'storeProduto'])->name('ficha.produto.store');
-    Route::post('/servicos/{servico}/ficha-tecnica', [\App\Http\Controllers\FichaTecnicaController::class, 'storeServico'])->name('ficha.servico.store');
-    Route::delete('/ficha-tecnica/{id}', [\App\Http\Controllers\FichaTecnicaController::class, 'destroy'])->name('ficha.destroy');
+    Route::get('/materia_primas/{materia_prima}/add-stock', [MateriaPrimaController::class, 'addStockForm'])->name('materia_primas.add_stock_form')->middleware('plano:estoque');
+    Route::post('/materia_primas/{materia_prima}/add-stock', [MateriaPrimaController::class, 'addStock'])->name('materia_primas.add_stock')->middleware('plano:estoque');
+    Route::post('/produtos/{produto}/ficha-tecnica', [\App\Http\Controllers\FichaTecnicaController::class, 'storeProduto'])->name('ficha.produto.store')->middleware('plano:estoque');
+    Route::post('/servicos/{servico}/ficha-tecnica', [\App\Http\Controllers\FichaTecnicaController::class, 'storeServico'])->name('ficha.servico.store')->middleware('plano:estoque');
+    Route::delete('/ficha-tecnica/{id}', [\App\Http\Controllers\FichaTecnicaController::class, 'destroy'])->name('ficha.destroy')->middleware('plano:estoque');
 
     // Assinaturas e Planos
     Route::resource('assinaturas', AssinaturaController::class)->except(['show', 'edit', 'update', 'destroy']);
-<<<<<<< HEAD
     // Rota para criar assinatura gratuita do plano Bronze
     Route::post('/assinaturas/gratis', [AssinaturaController::class, 'gratis'])->name('assinaturas.gratis');
-=======
->>>>>>> 59cdc6e74334d25cc711c95fc0b2dac517a3c838
+
+    // Rotas para cancelar e upgrade de assinatura
     Route::post('/assinaturas/cancelar', [AssinaturaController::class, 'cancelar'])->name('assinaturas.cancelar');
     Route::post('/assinaturas/upgrade', [AssinaturaController::class, 'upgrade'])->name('assinaturas.upgrade');
 
     // Gerenciamento de Usuários (para administradores)
     Route::resource('usuarios', UsuarioController::class)->middleware('permission:ver_usuarios');
-
 
 Route::get('/ouro', function () {
     return "Área Ouro";

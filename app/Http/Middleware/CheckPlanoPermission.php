@@ -20,18 +20,24 @@ class CheckPlanoPermission
 
         // Verificar se usuário tem assinatura ativa
         if (!$user->temAssinaturaAtiva()) {
-            return response()->json([
-                'error' => 'Assinatura expirada ou inexistente',
-                'message' => 'Renove sua assinatura para continuar usando o sistema'
-            ], 403);
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'error' => 'Assinatura expirada ou inexistente',
+                    'message' => 'Renove sua assinatura para continuar usando o sistema'
+                ], 403);
+            }
+            return redirect()->route('assinaturas.index')->with('error', 'Sua assinatura expirou. Renove ou faça upgrade para continuar.');
         }
 
         // Verificar se o plano permite o recurso
         if (!$user->podeAcessarRecurso($recurso)) {
-            return response()->json([
-                'error' => 'Recurso não disponível no seu plano',
-                'message' => 'Atualize seu plano para acessar esta funcionalidade'
-            ], 403);
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'error' => 'Recurso não disponível no seu plano',
+                    'message' => 'Atualize seu plano para acessar esta funcionalidade'
+                ], 403);
+            }
+            return redirect()->route('assinaturas.index')->with('error', 'Este recurso não está disponível no seu plano atual. Faça um upgrade para acessar!');
         }
 
         return $next($request);

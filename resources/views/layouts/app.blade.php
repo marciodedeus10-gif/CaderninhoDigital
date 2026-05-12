@@ -493,8 +493,8 @@
                             </a>
                         </li>
                         <li>
-                            <a href="{{ route('perfil.edit') }}">
-                                <i class="bi bi-gear"></i> Configurações
+                            <a href="{{ route('assinaturas.index') }}">
+                                <i class="bi bi-star"></i> Minha Assinatura
                             </a>
                         </li>
                         <li>
@@ -638,6 +638,19 @@
                            data-tooltip="Contatos">
                             <i class="bi bi-envelope nav-icon"></i>
                             <span class="nav-label">Contatos</span>
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="sidebar-divider"></div>
+                <p class="sidebar-section-label">Sistema</p>
+                <ul class="p-0 m-0">
+                    <li class="nav-item">
+                        <a href="{{ route('assinaturas.index') }}"
+                           class="nav-link-item {{ request()->routeIs('assinaturas.*') ? 'active' : '' }}"
+                           data-tooltip="Minha Assinatura">
+                            <i class="bi bi-star nav-icon"></i>
+                            <span class="nav-label">Minha Assinatura</span>
                         </a>
                     </li>
                 </ul>
