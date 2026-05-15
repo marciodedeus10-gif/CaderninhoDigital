@@ -76,39 +76,14 @@ class User extends Authenticatable
 
     public function temAssinaturaAtiva()
     {
-        if (!$this->assinatura) {
-            return false;
-        }
-
-        if ($this->assinatura->estaAtiva()) {
-            return true;
-        }
-
-        // Se a assinatura expirou, faz o downgrade para Bronze
-        $planoBronze = \App\Models\Plano::where('nome', 'Bronze')->first();
-        if ($planoBronze && $this->assinatura->plano_id !== $planoBronze->id) {
-            $this->assinatura->update([
-                'plano_id' => $planoBronze->id,
-                'status' => 'ativa',
-                'data_fim' => now()->addYears(10), // Bronze é ilimitado no tempo
-                'valor' => 0.00
-            ]);
-            // Atualiza a relação na memória
-            $this->load('assinatura');
-            $this->load('plano');
-            return true;
-        }
-
-        return false;
+        // Todos os usuários têm acesso total, ignorando planos de assinatura.
+        return true;
     }
 
     public function podeAcessarRecurso($recurso)
     {
-        if (!$this->temAssinaturaAtiva()) {
-            return false;
-        }
-
-        return $this->plano->permiteRecurso($recurso);
+        // Todos os usuários têm acesso total, ignorando planos.
+        return true;
     }
 
     public function getLimite($chave)
